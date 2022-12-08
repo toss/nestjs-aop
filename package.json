@@ -5,6 +5,10 @@
   "types": "dist/index.d.ts",
   "module": "esm/index.js",
   "license": "ISC",
+  "engines": {
+    "node": ">=16",
+    "pnpm": "7.x"
+  },
   "scripts": {
     "test": "jest --maxWorkers 4",
     "build": "rm -rf dist esm && tsc -p tsconfig.build.json && tsc -p tsconfig.esm.json"
