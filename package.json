@@ -1,6 +1,6 @@
 {
   "name": "@toss/nestjs-aop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "esm/index.js",
@@ -42,6 +42,19 @@
     "ts-jest": "^28.0.8",
     "typescript": "~4.7.4"
   },
+  "homepage": "https://github.com/toss/nestjs-aop",
+  "bugs": {
+    "url": "https://github.com/toss/nestjs-aop/issues"
+  },
+  "keywords": [
+    "nestjs-aop",
+    "nest-aop",
+    "aop",
+    "nestjs-lazy-decorator",
+    "lazy-decorator",
+    "toss",
+    "toss-nestjs"
+  ],
   "publishConfig": {
     "access": "public"
   }
