@@ -2,8 +2,8 @@ import 'reflect-metadata';
 
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { AopModule } from '../../aop.module';
-import { FooModule, FooService } from './foo';
+import { FooModule, FooService } from './fixture/foo';
+import { AopModule } from '../aop.module';
 
 describe('AopModule', () => {
   it('Lazy decoder overwrites the original function', async () => {
