@@ -11,8 +11,8 @@
     A way to gracefully apply AOP to nestjs
     <br>
     Use nestjs managed instances in any decorator gracefully
-    <h5>CAVEAT: <a>Use interceptor over this when it comes to controller
-</a></h5>
+    <h6>CAVEAT: <a>Use interceptor over this when it comes to controller
+</a></h6>
   </p>
 </div>
 
