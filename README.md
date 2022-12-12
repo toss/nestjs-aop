@@ -25,6 +25,7 @@
     <li><a href="#installation">Installation</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#caveat">Caveat</a></li>
+    <li><a href="#references">References</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
   </ol>
@@ -114,6 +115,13 @@ However, the controller's method have been already registered in the router befo
 <br>
 <br>
 Because Nestjs has Interceptors, we decided to leave this issue for a while even though we can solve it right now.
+
+
+<!-- REFERENCES -->
+## References
+- https://toss.tech/article/nestjs-custom-decorator
+- https://youtu.be/VH1GTGIMHQw?t=2973
+
 
 
 <!-- CONTRIBUTING -->
