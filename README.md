@@ -37,9 +37,9 @@
 ## Installation
 
 ```sh
-npm install @toss/nestjs-api
-pnpm add @toss/nestjs-api
-yarn add @toss/nestjs-api
+npm install @toss/nestjs-aop
+pnpm add @toss/nestjs-aop
+yarn add @toss/nestjs-aop
 ```
 
 
