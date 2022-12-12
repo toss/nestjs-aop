@@ -89,7 +89,7 @@ export class CacheDecorator implements LazyDecorator<any, CacheOptions> {
 export class CacheModule {}
 ```
 
-#### 5. Create decorator that mark metadata of LazyDecorator
+#### 5. Create decorator that marks metadata of LazyDecorator
 ```typescript
 export const Cache = (options: CacheOptions) => SetMetadata(CACHE_DECORATOR, options);
 ```
