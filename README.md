@@ -1,8 +1,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="https://wp-blog.toss.im/wp-content/uploads/2022/09/toss-symbol.jpg" alt="Logo" height="100">
+  <a href="https://github.com/toss/nestjs-aop">
+    <img src="https://toss.tech/wp-content/uploads/2022/11/tech-article-nest-js-02.png" alt="Logo" height="100">
   </a>
 
   <h3 align="center">@toss/nestjs-aop</h3>
