@@ -61,7 +61,6 @@ export class AppModule {}
 #### 2. Create symbol for LazyDecorator
 ```typescript
 export const CACHE_DECORATOR = Symbol('CACHE_DECORATOR');
-export const Cache = (options: CacheOptions) => SetMetadata(CACHE_DECORATOR, options);
 ```
 
 #### 3. Implement LazyDecorator using nestjs provider
