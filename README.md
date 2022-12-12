@@ -81,12 +81,20 @@ export class CacheDecorator implements LazyDecorator<any, CacheOptions> {
 }
 ```
 
-#### 4. Create decorator that mark metadata of LazyDecorator
+#### 4. Add LazyDecoratorImpl to providers of module
+```typescript
+@Module({
+  providers: [CacheDecorator],
+})
+export class CacheModule {}
+```
+
+#### 5. Create decorator that mark metadata of LazyDecorator
 ```typescript
 export const Cache = (options: CacheOptions) => SetMetadata(CACHE_DECORATOR, options);
 ```
 
-#### 5. Use it!
+#### 6. Use it!
 ```typescript
 export class SomeService {
   @Cache({
