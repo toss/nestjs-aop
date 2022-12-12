@@ -139,7 +139,7 @@ We welcome contribution from everyone in this project. Read [CONTRIBUTING.md](CO
 
 <!-- LICENSE -->
 ## License
-MIT © Viva Republica, Inc. See [LICENSE.md](LICENSE.md) for details.
+MIT © Viva Republica, Inc. See [LICENSE](LICENSE) for details.
 
 
 <!-- BOTTOM LOGO -->
