@@ -84,7 +84,7 @@ export class FooDecorator implements LazyDecorator<any, FooOptions> {
 
 <!-- CAVEAT -->
 ## Caveat
-LazyDecorator does not apply to controllers. Because [registerRouter is called before callInitHook.](https://github.com/nestjs/nest/blob/349840e0165b38de10e81ebce02b5c878124a9af/packages/core/nest-application.ts#L174-L175)
+Controllers do not apply LazyDecorator. Because [registerRouter is called before callInitHook.](https://github.com/nestjs/nest/blob/349840e0165b38de10e81ebce02b5c878124a9af/packages/core/nest-application.ts#L174-L175)
  
 ```typescript
   // NestApplication.init
@@ -93,10 +93,10 @@ LazyDecorator does not apply to controllers. Because [registerRouter is called b
   await this.callInitHook();
 ```
 
-AopModule works by wrapping the provider's method in the onModuleInit step. So the controller's method is already registered with the router before wrapping and does not work.
+However, the controller's method have been already registered in the router before wrapping, so it does not work.
 <br>
 <br>
-We can solve this problem, but we decided to pend it right now because Nestjs already has Interceptors.
+Because Nestjs has Interceptors, we decided to leave this issue for a while even though we can solve it right now.
 
 
 <!-- CONTRIBUTING -->
