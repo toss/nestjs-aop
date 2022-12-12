@@ -10,7 +10,7 @@
   <p align="center">
     A way to gracefully apply AOP to nestjs
     <br>
-    Use nestjs managed instances in any decorator gracefully
+    Use nestjs managed instances in any decorators gracefully
     <h6>CAVEAT: <a>Use interceptor over this when it comes to controller
 </a></h6>
   </p>
