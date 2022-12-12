@@ -59,17 +59,17 @@ export class AppModule {}
 
 #### 2. Create symbol for LazyDecorator
 ```typescript
-export const FOO = Symbol('FOO');
-export const Foo = (options: FooOptions) => SetMetadata(FOO, options);
+export const CACHE_DECORATOR = Symbol('CACHE_DECORATOR');
+export const Cache = (options: CacheOptions) => SetMetadata(CACHE_DECORATOR, options);
 ```
 
 #### 3. Implement LazyDecorator using nestjs provider
 ```typescript
-@Aspect(FOO)
-export class FooDecorator implements LazyDecorator<any, FooOptions> {
+@Aspect(CACHE_DECORATOR)
+export class CacheDecorator implements LazyDecorator<any, CacheOptions> {
   constructor(private readonly cache: Cache) {}
 
-  wrap({ method, metadata: options }: WrapParams<any, FooOptions>) {
+  wrap({ method, metadata: options }: WrapParams<any, CacheOptions>) {
     return (...args: any) => {
       const cache = this.cache.get(...args)
       if (cache) { 
@@ -83,13 +83,13 @@ export class FooDecorator implements LazyDecorator<any, FooOptions> {
 
 #### 4. Create decorator that mark metadata of LazyDecorator
 ```typescript
-export const Foo = (options: FooOptions) => SetMetadata(FOO, options);
+export const Cache = (options: CacheOptions) => SetMetadata(CACHE_DECORATOR, options);
 ```
 
 #### 5. Use it!
 ```typescript
 export class SomeService {
-  @Foo({
+  @Cache({
     // ...options(metadata value)
   })
   some() {
