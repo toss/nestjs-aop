@@ -57,7 +57,7 @@ yarn add @toss/nestjs-aop
 export class AppModule {}
 ```
 
-#### 2. Create symbol and decorator for LazyDecorator
+#### 2. Create symbol for LazyDecorator
 ```typescript
 export const FOO = Symbol('FOO');
 export const Foo = (options: FooOptions) => SetMetadata(FOO, options);
@@ -77,6 +77,23 @@ export class FooDecorator implements LazyDecorator<any, FooOptions> {
       }
       return method(...args);
     };
+  }
+}
+```
+
+#### 4. Create decorator that mark metadata of LazyDecorator
+```typescript
+export const Foo = (options: FooOptions) => SetMetadata(FOO, options);
+```
+
+#### 5. Use it!
+```typescript
+export class SomeService {
+  @Foo({
+    // ...options(metadata value)
+  })
+  some() {
+    // ...
   }
 }
 ```
