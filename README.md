@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/toss/nestjs-aop">
-    <img src="https://toss.tech/wp-content/uploads/2022/11/tech-article-nest-js-02.png" alt="Logo" height="100">
+    <img src="https://toss.tech/wp-content/uploads/2022/11/tech-article-nest-js-02.png" alt="Logo" height="200">
   </a>
 
   <h3 align="center">@toss/nestjs-aop</h3>
