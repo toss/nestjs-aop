@@ -109,7 +109,7 @@ export class SomeService {
 
 <!-- CAVEAT -->
 ## Caveat
-Controllers do not apply LazyDecorator. Because [registerRouter is called before callInitHook.](https://github.com/nestjs/nest/blob/349840e0165b38de10e81ebce02b5c878124a9af/packages/core/nest-application.ts#L174-L175)
+LazyDecorator doesn't support controller now. Because [registerRouter is called before callInitHook.](https://github.com/nestjs/nest/blob/349840e0165b38de10e81ebce02b5c878124a9af/packages/core/nest-application.ts#L174-L175)
  
 ```typescript
   // NestApplication.init
