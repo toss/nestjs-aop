@@ -71,11 +71,12 @@ export class CacheDecorator implements LazyDecorator<any, CacheOptions> {
 
   wrap({ method, metadata: options }: WrapParams<any, CacheOptions>) {
     return (...args: any) => {
-      const cache = this.cache.get(...args)
-      if (cache) { 
-        return cache;
+      let cachedValue = this.cache.get(...args);
+      if (!cachedValue) { 
+        cachedValue = method(...args);
+        this.cache.set(cachedValue, ...args);
       }
-      return method(...args);
+      return cachedValue;
     };
   }
 }
