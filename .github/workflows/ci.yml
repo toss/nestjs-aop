@@ -24,13 +24,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2.2.1
-        with:
-          version: 7
-          run_install: |
-            - args: [--frozen-lockfile]
-
       - name: Build
         run: |
           pnpm build
