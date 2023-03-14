@@ -14,7 +14,7 @@ describe('AopModule', () => {
     const app = module.createNestApplication(new FastifyAdapter());
     await app.init();
     const fooService = app.get(FooService);
-    expect(fooService.foo('abc', 1)).toMatchInlineSnapshot(`"abc1:sample:options"`);
+    expect(fooService.foo('original', 0)).toMatchInlineSnapshot(`"original0:dependency_options"`);
   });
 
   it('Prototype of the overwritten function must be the original function', async () => {
@@ -37,8 +37,8 @@ describe('AopModule', () => {
     await app.init();
     const fooService = app.get(FooService);
     // TODO: https://github.com/toss/nestjs-aop/issues/7
-    expect(fooService.multipleDecorated('abc', 1)).toMatchInlineSnapshot(
-      `"abc1:4:2:sample:5:sample:3:sample:1"`,
+    expect(fooService.multipleDecorated('original', 0)).toMatchInlineSnapshot(
+      `"original0:ts_decroator_4:ts_decroator_2:dependency_5:dependency_3:dependency_1"`,
     );
   });
 });

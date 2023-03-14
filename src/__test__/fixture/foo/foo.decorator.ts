@@ -20,7 +20,7 @@ export class FooDecorator implements LazyDecorator<FooService['foo'], FooOptions
       const originResult = method(arg1, arg2);
       const sample = this.sampleService.sample();
 
-      return originResult + ':' + sample + ':' + options.options;
+      return originResult + ':' + sample + '_' + options.options;
     };
   }
 }
@@ -29,7 +29,7 @@ export const NotAopFoo = (options: FooOptions): MethodDecorator => {
   return (_: any, __: string | symbol, descriptor: PropertyDescriptor) => {
     const originMethod = descriptor.value;
     descriptor.value = function (arg1: string, arg2: number) {
-      return originMethod.call(this, arg1, arg2) + ':' + options.options;
+      return originMethod.call(this, arg1, arg2) + ':ts_decroator_' + options.options;
     };
     Object.setPrototypeOf(descriptor.value, originMethod);
   };
