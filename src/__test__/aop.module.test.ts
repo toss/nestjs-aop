@@ -26,9 +26,12 @@ describe('AopModule', () => {
     await app.init();
     const fooService = app.get(FooService);
 
+    // In the 'SetOriginalTrue' decorator, the original field in the originalFn was set to true.
+    // Verify that the 'fooService.foo' object has no properties and its 'original' property is true
     expect(Object.keys(fooService.foo)).toMatchInlineSnapshot(`Array []`);
     expect((fooService.foo as any)['original']).toBe(true);
 
+    // Get the prototype of the 'fooService.foo' object and verify that it only has an 'original' property
     const proto = Object.getPrototypeOf(fooService.foo);
     expect(Object.keys(proto)).toMatchInlineSnapshot(`
     Array [
