@@ -25,7 +25,17 @@ describe('AopModule', () => {
     const app = module.createNestApplication(new FastifyAdapter());
     await app.init();
     const fooService = app.get(FooService);
-    expect(Object.getPrototypeOf(fooService.foo)).toBe(fooService.originalFoo);
+
+    expect(Object.keys(fooService.foo)).toMatchInlineSnapshot(`Array []`);
+    expect((fooService.foo as any)['original']).toBe(true);
+
+    const proto = Object.getPrototypeOf(fooService.foo);
+    expect(Object.keys(proto)).toMatchInlineSnapshot(`
+    Array [
+      "original",
+    ]
+    `);
+    expect((proto as any)['original']).toBe(true);
   });
 
   it('Decorator order must be guaranteed', async () => {
@@ -36,9 +46,8 @@ describe('AopModule', () => {
     const app = module.createNestApplication(new FastifyAdapter());
     await app.init();
     const fooService = app.get(FooService);
-    // TODO: https://github.com/toss/nestjs-aop/issues/7
     expect(fooService.multipleDecorated('original', 0)).toMatchInlineSnapshot(
-      `"original0:ts_decroator_4:ts_decroator_2:dependency_5:dependency_3:dependency_1"`,
+      `"original0:dependency_5:ts_decroator_4:dependency_3:ts_decroator_2:dependency_1"`,
     );
   });
 });

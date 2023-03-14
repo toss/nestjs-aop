@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, MetadataScanner, Reflector } from '@nestjs/core';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
+import { once } from 'ramda';
 import { ASPECT } from './aspect';
 import { LazyDecorator } from './lazy-decorator';
 
@@ -34,20 +35,25 @@ export class AutoAspectExecutor implements OnModuleInit {
             lazyDecorators.forEach((lazyDecorator) => {
               const metadataKey = this.reflector.get(ASPECT, lazyDecorator.constructor);
 
-              const metadataList: unknown[] = this.reflector.get(metadataKey, instance[methodName]);
+              const metadataList: { options: unknown; aopSymbol: symbol }[] = this.reflector.get(
+                metadataKey,
+                instance[methodName],
+              );
               if (!metadataList) {
                 return;
               }
 
-              for (const metadata of metadataList) {
-                const wrappedMethod = lazyDecorator.wrap({
-                  instance,
-                  methodName,
-                  method: instance[methodName].bind(instance),
-                  metadata,
+              for (const { options, aopSymbol } of metadataList) {
+                instance[methodName][aopSymbol] = once((originalFn: any) => {
+                  const wrappedMethod = lazyDecorator.wrap({
+                    instance,
+                    methodName,
+                    method: originalFn.bind(instance),
+                    metadata: options,
+                  });
+                  Object.setPrototypeOf(wrappedMethod, instance[methodName]);
+                  return wrappedMethod;
                 });
-                Object.setPrototypeOf(wrappedMethod, instance[methodName]);
-                instance[methodName] = wrappedMethod;
               }
             }),
         );

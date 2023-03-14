@@ -34,3 +34,9 @@ export const NotAopFoo = (options: FooOptions): MethodDecorator => {
     Object.setPrototypeOf(descriptor.value, originMethod);
   };
 };
+
+export const SetOriginalTrue = () => {
+  return (_: any, __: string | symbol, descriptor: PropertyDescriptor) => {
+    descriptor.value['original'] = true;
+  };
+};
