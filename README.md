@@ -92,7 +92,7 @@ export class CacheModule {}
 
 #### 5. Create decorator that marks metadata of LazyDecorator
 ```typescript
-export const Cache = createDecorator<CacheOptions>(CACHE_DECORATOR)
+export const Cache = (options: CacheOptions) => createDecorator<CacheOptions>(CACHE_DECORATOR, options)
 ```
 
 #### 6. Use it!

@@ -9,7 +9,7 @@ export const FOO = Symbol('FOO');
 type FooOptions = {
   options: string;
 };
-export const Foo = createDecorator<FooOptions>(FOO);
+export const Foo = (options: FooOptions) => createDecorator(FOO, options);
 
 @Aspect(FOO)
 export class FooDecorator implements LazyDecorator<FooService['foo'], FooOptions> {
