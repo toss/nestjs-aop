@@ -1,5 +1,5 @@
-import { SetMetadata } from '@nestjs/common';
 import { Aspect } from '../../../aspect';
+import { createDecorator } from '../../../create-decorator';
 import { LazyDecorator, WrapParams } from '../../../lazy-decorator';
 import { SampleService } from '../sample';
 import { FooService } from './foo.service';
@@ -9,7 +9,7 @@ export const FOO = Symbol('FOO');
 type FooOptions = {
   options: string;
 };
-export const Foo = (options: FooOptions) => SetMetadata(FOO, options);
+export const Foo = createDecorator<FooOptions>(FOO);
 
 @Aspect(FOO)
 export class FooDecorator implements LazyDecorator<FooService['foo'], FooOptions> {

@@ -12,4 +12,11 @@ export class FooService {
   foo(arg1: string, arg2: number) {
     return arg1 + arg2;
   }
+
+  @Foo({ options: 'options1' })
+  @Foo({ options: 'options2' })
+  @Foo({ options: 'options3' })
+  multipleDecorated(arg1: string, arg2: number) {
+    return arg1 + arg2;
+  }
 }
