@@ -9,11 +9,14 @@ export class FooService {
     return arg1 + arg2;
   }
 
+  @Foo({ options: '0' })
   @Foo({ options: '1' })
   @NotAopFoo({ options: '2' })
   @Foo({ options: '3' })
   @NotAopFoo({ options: '4' })
-  @Foo({ options: '5' })
+  @NotAopFoo({ options: '5' })
+  @Foo({ options: '6' })
+  @Foo({ options: '7' })
   multipleDecorated(arg1: string, arg2: number) {
     return arg1 + arg2;
   }
