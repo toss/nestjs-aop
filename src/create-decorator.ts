@@ -1,10 +1,20 @@
 import { applyDecorators } from '@nestjs/common';
 import { AddMetadata } from './utils';
 
-export function createDecorator<T = void>(metadataKey: any, metadata: T): MethodDecorator {
+/**
+ * @param metadataKey equal to 1st argument of Aspect Decorator
+ * @param metadata The value corresponding to the metadata of WrapParams. It can be obtained from LazyDecorator's warp method and used.
+ */
+export function createDecorator<T = void>(
+  metadataKey: symbol | string,
+  metadata: T,
+): MethodDecorator {
   const aopSymbol = Symbol('AOP_DECORATOR');
   return applyDecorators(
-    AddMetadata<{ options: T; aopSymbol: symbol }>(metadataKey, { options: metadata, aopSymbol }),
+    AddMetadata<symbol | string, { options: T; aopSymbol: symbol }>(metadataKey, {
+      options: metadata,
+      aopSymbol,
+    }),
     function (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
       const originalFn = descriptor.value;
       descriptor.value = (...args: any[]) => {

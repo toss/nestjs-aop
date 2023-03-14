@@ -1,4 +1,4 @@
-export const AddMetadata = <K = string, V = any>(
+export const AddMetadata = <K extends string | symbol = string, V = any>(
   metadataKey: K,
   metadataValue: V,
 ): MethodDecorator => {

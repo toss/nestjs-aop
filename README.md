@@ -64,6 +64,8 @@ export const CACHE_DECORATOR = Symbol('CACHE_DECORATOR');
 ```
 
 #### 3. Implement LazyDecorator using nestjs provider
+`metadata` is the second parameter of createDecorator.
+
 ```typescript
 @Aspect(CACHE_DECORATOR)
 export class CacheDecorator implements LazyDecorator<any, CacheOptions> {
@@ -91,6 +93,8 @@ export class CacheModule {}
 ```
 
 #### 5. Create decorator that marks metadata of LazyDecorator
+`options` can be obtained from the warp method and used.
+
 ```typescript
 export const Cache = (options: CacheOptions) => createDecorator<CacheOptions>(CACHE_DECORATOR, options)
 ```
