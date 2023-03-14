@@ -5,13 +5,13 @@ import { AddMetadata } from './utils';
  * @param metadataKey equal to 1st argument of Aspect Decorator
  * @param metadata The value corresponding to the metadata of WrapParams. It can be obtained from LazyDecorator's warp method and used.
  */
-export function createDecorator<T = void>(
+export const createDecorator = (
   metadataKey: symbol | string,
-  metadata: T,
-): MethodDecorator {
+  metadata?: unknown,
+): MethodDecorator => {
   const aopSymbol = Symbol('AOP_DECORATOR');
   return applyDecorators(
-    AddMetadata<symbol | string, { metadata: T; aopSymbol: symbol }>(metadataKey, {
+    AddMetadata<symbol | string, { metadata?: unknown; aopSymbol: symbol }>(metadataKey, {
       metadata,
       aopSymbol,
     }),
@@ -29,4 +29,4 @@ export function createDecorator<T = void>(
       Object.setPrototypeOf(descriptor.value, originalFn);
     },
   );
-}
+};
