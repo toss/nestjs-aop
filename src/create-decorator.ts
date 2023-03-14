@@ -11,8 +11,8 @@ export function createDecorator<T = void>(
 ): MethodDecorator {
   const aopSymbol = Symbol('AOP_DECORATOR');
   return applyDecorators(
-    AddMetadata<symbol | string, { options: T; aopSymbol: symbol }>(metadataKey, {
-      options: metadata,
+    AddMetadata<symbol | string, { metadata: T; aopSymbol: symbol }>(metadataKey, {
+      metadata,
       aopSymbol,
     }),
     function (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {

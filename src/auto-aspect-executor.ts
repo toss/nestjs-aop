@@ -35,7 +35,7 @@ export class AutoAspectExecutor implements OnModuleInit {
             lazyDecorators.forEach((lazyDecorator) => {
               const metadataKey = this.reflector.get(ASPECT, lazyDecorator.constructor);
 
-              const metadataList: { options: unknown; aopSymbol: symbol }[] = this.reflector.get(
+              const metadataList: { metadata: unknown; aopSymbol: symbol }[] = this.reflector.get(
                 metadataKey,
                 instance[methodName],
               );
@@ -43,13 +43,13 @@ export class AutoAspectExecutor implements OnModuleInit {
                 return;
               }
 
-              for (const { options, aopSymbol } of metadataList) {
+              for (const { metadata, aopSymbol } of metadataList) {
                 instance[methodName][aopSymbol] = once((originalFn: any) => {
                   const wrappedMethod = lazyDecorator.wrap({
                     instance,
                     methodName,
                     method: originalFn.bind(instance),
-                    metadata: options,
+                    metadata,
                   });
                   Object.setPrototypeOf(wrappedMethod, instance[methodName]);
                   return wrappedMethod;
