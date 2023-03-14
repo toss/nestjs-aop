@@ -1,4 +1,3 @@
-import { applyDecorators } from '@nestjs/common';
 import { AddMetadata } from './utils';
 
 /**
@@ -10,23 +9,28 @@ export const createDecorator = (
   metadata?: unknown,
 ): MethodDecorator => {
   const aopSymbol = Symbol('AOP_DECORATOR');
-  return applyDecorators(
-    AddMetadata<symbol | string, { metadata?: unknown; aopSymbol: symbol }>(metadataKey, {
+  return function (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+    const originalFn = descriptor.value;
+
+    descriptor.value = (...args: any[]) => {
+      if (target[propertyKey][aopSymbol]) {
+        // If there is a wrapper stored in the method, use it
+        return target[propertyKey][aopSymbol].apply(target, args);
+      }
+      // if there is no wrapper that comes out of method, call originalFn
+      return originalFn.apply(target, args);
+    };
+
+    Object.setPrototypeOf(descriptor.value, originalFn);
+
+    const addMetadataDecorator = AddMetadata<
+      symbol | string,
+      { metadata?: unknown; aopSymbol: symbol; originalFn: unknown }
+    >(metadataKey, {
+      originalFn,
       metadata,
       aopSymbol,
-    }),
-    function (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
-      const originalFn = descriptor.value;
-      descriptor.value = (...args: any[]) => {
-        if (target[propertyKey][aopSymbol]) {
-          // If there is a wrapper stored in the method, use it
-          return target[propertyKey][aopSymbol](originalFn).apply(target, args);
-        }
-        // if there is no wrapper that comes out of method, call originalFn
-        return originalFn.apply(target, args);
-      };
-
-      Object.setPrototypeOf(descriptor.value, originalFn);
-    },
-  );
+    });
+    return addMetadataDecorator(target, propertyKey, descriptor);
+  };
 };

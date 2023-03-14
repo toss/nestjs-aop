@@ -1,7 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, MetadataScanner, Reflector } from '@nestjs/core';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
-import { once } from 'ramda';
 import { ASPECT } from './aspect';
 import { LazyDecorator } from './lazy-decorator';
 
@@ -24,40 +23,39 @@ export class AutoAspectExecutor implements OnModuleInit {
       return;
     }
 
-    providers
+    const singletonClassInstances = providers
       .filter((wrapper) => wrapper.isDependencyTreeStatic())
-      .filter(({ instance }) => instance && Object.getPrototypeOf(instance))
-      .forEach(({ instance }) => {
-        this.metadataScanner.scanFromPrototype(
-          instance,
-          Object.getPrototypeOf(instance),
-          (methodName) =>
-            lazyDecorators.forEach((lazyDecorator) => {
-              const metadataKey = this.reflector.get(ASPECT, lazyDecorator.constructor);
+      .filter(({ instance }) => instance && Object.getPrototypeOf(instance));
 
-              const metadataList: { metadata?: unknown; aopSymbol: symbol }[] = this.reflector.get(
-                metadataKey,
-                instance[methodName],
-              );
-              if (!metadataList) {
-                return;
-              }
+    for (const { instance } of singletonClassInstances) {
+      const methodNames = this.metadataScanner.getAllMethodNames(Object.getPrototypeOf(instance));
 
-              for (const { metadata, aopSymbol } of metadataList) {
-                instance[methodName][aopSymbol] = once((originalFn: any) => {
-                  const wrappedMethod = lazyDecorator.wrap({
-                    instance,
-                    methodName,
-                    method: originalFn.bind(instance),
-                    metadata,
-                  });
-                  Object.setPrototypeOf(wrappedMethod, instance[methodName]);
-                  return wrappedMethod;
-                });
-              }
-            }),
-        );
-      });
+      for (const methodName of methodNames) {
+        lazyDecorators.forEach((lazyDecorator) => {
+          const metadataKey = this.reflector.get(ASPECT, lazyDecorator.constructor);
+
+          const metadataList: {
+            originalFn: any;
+            metadata?: unknown;
+            aopSymbol: symbol;
+          }[] = this.reflector.get(metadataKey, instance[methodName]);
+          if (!metadataList) {
+            return;
+          }
+
+          for (const { originalFn, metadata, aopSymbol } of metadataList) {
+            const wrappedMethod = lazyDecorator.wrap({
+              instance,
+              methodName,
+              method: originalFn.bind(instance),
+              metadata,
+            });
+            Object.setPrototypeOf(wrappedMethod, instance[methodName]);
+            instance[methodName][aopSymbol] = wrappedMethod;
+          }
+        });
+      }
+    }
   }
 
   private lookupLazyDecorators(providers: InstanceWrapper[]): LazyDecorator[] {
