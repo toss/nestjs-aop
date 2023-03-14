@@ -28,7 +28,12 @@ export class AutoAspectExecutor implements OnModuleInit {
       .filter(({ instance }) => instance && Object.getPrototypeOf(instance));
 
     for (const { instance } of singletonClassInstances) {
-      const methodNames = this.metadataScanner.getAllMethodNames(Object.getPrototypeOf(instance));
+      // Use scanFromPrototype for support nestjs 8
+      const methodNames = this.metadataScanner.scanFromPrototype(
+        instance,
+        Object.getPrototypeOf(instance),
+        (name) => name,
+      );
 
       for (const methodName of methodNames) {
         lazyDecorators.forEach((lazyDecorator) => {
