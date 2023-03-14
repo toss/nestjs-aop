@@ -34,10 +34,10 @@ describe('AopModule', () => {
     // Get the prototype of the 'fooService.foo' object and verify that it only has an 'original' property
     const proto = Object.getPrototypeOf(fooService.foo);
     expect(Object.keys(proto)).toMatchInlineSnapshot(`
-    Array [
-      "original",
-    ]
-    `);
+          Array [
+            "original",
+          ]
+        `);
     expect((proto as any)['original']).toBe(true);
   });
 
@@ -50,7 +50,7 @@ describe('AopModule', () => {
     await app.init();
     const fooService = app.get(FooService);
     expect(fooService.multipleDecorated('original', 0)).toMatchInlineSnapshot(
-      `"original0:dependency_5:ts_decroator_4:dependency_3:ts_decroator_2:dependency_1"`,
+      `"original0:dependency_7:dependency_6:ts_decroator_5:ts_decroator_4:dependency_3:ts_decroator_2:dependency_1:dependency_0"`,
     );
   });
 });
