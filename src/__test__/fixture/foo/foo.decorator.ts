@@ -9,7 +9,7 @@ export const FOO = Symbol('FOO');
 type FooOptions = {
   options: string;
 };
-export const Foo = createDecorator<FooOptions>(FOO);
+export const Foo = (options: FooOptions) => createDecorator(FOO, options);
 
 @Aspect(FOO)
 export class FooDecorator implements LazyDecorator<FooService['foo'], FooOptions> {
@@ -32,5 +32,11 @@ export const NotAopFoo = (options: FooOptions): MethodDecorator => {
       return originMethod.call(this, arg1, arg2) + ':ts_decroator_' + options.options;
     };
     Object.setPrototypeOf(descriptor.value, originMethod);
+  };
+};
+
+export const SetOriginalTrue = () => {
+  return (_: any, __: string | symbol, descriptor: PropertyDescriptor) => {
+    descriptor.value['original'] = true;
   };
 };
