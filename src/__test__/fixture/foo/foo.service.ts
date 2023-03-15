@@ -25,10 +25,11 @@ export class FooService {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     return 'foo' + id;
   }
-
-  thisValue: any = undefined;
   @Foo({ options: '1' })
   thisTest() {
-    this.thisValue = this;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    fooThisValue = this;
   }
 }
+
+export let fooThisValue: any;

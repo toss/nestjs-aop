@@ -3,7 +3,8 @@ import 'reflect-metadata';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { AopModule } from '../aop.module';
-import { FooModule, FooService } from './fixture/foo';
+import { BarModule, BarService, barThisValue } from './fixture/bar';
+import { FooModule, FooService, fooThisValue } from './fixture/foo';
 
 describe('AopModule', () => {
   it('Lazy decoder overwrites the original function', async () => {
@@ -54,18 +55,31 @@ describe('AopModule', () => {
     );
   });
 
-  it('this of the decorated function must be this', async () => {
-    const module = await Test.createTestingModule({
-      imports: [
-        // AopModule,
-        FooModule,
-      ],
-    }).compile();
+  describe('this of the decorated function must be this', () => {
+    it('With AopModule', async () => {
+      const module = await Test.createTestingModule({
+        imports: [AopModule, FooModule],
+      }).compile();
 
-    const app = module.createNestApplication(new FastifyAdapter());
-    await app.init();
-    const fooService = app.get(FooService);
-    fooService.thisTest();
-    expect(fooService.thisValue).toBe(fooService);
+      const app = module.createNestApplication(new FastifyAdapter());
+      await app.init();
+      const fooService = app.get(FooService);
+
+      fooService.thisTest();
+      expect(fooThisValue).toBe(fooService);
+    });
+
+    it('Without AopModule', async () => {
+      const module = await Test.createTestingModule({
+        imports: [BarModule],
+      }).compile();
+
+      const app = module.createNestApplication(new FastifyAdapter());
+      await app.init();
+      const barService = app.get(BarService);
+
+      barService.thisTest();
+      expect(barThisValue).toBe(barService);
+    });
   });
 });
