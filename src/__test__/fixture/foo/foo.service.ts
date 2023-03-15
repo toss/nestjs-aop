@@ -20,4 +20,9 @@ export class FooService {
   multipleDecorated(arg1: string, arg2: number) {
     return arg1 + arg2;
   }
+
+  async getFoo(id) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return 'foo' + id;
+  }
 }

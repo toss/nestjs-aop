@@ -16,6 +16,7 @@ export class AutoAspectExecutor implements OnModuleInit {
   ) {}
 
   onModuleInit() {
+    const controllers = this.discoveryService.getControllers();
     const providers = this.discoveryService.getProviders();
 
     const lazyDecorators = this.lookupLazyDecorators(providers);
@@ -24,6 +25,7 @@ export class AutoAspectExecutor implements OnModuleInit {
     }
 
     const singletonClassInstances = providers
+      .concat(controllers)
       .filter((wrapper) => wrapper.isDependencyTreeStatic())
       .filter(({ instance }) => instance && Object.getPrototypeOf(instance));
 

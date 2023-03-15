@@ -11,7 +11,6 @@
     A way to gracefully apply AOP to nestjs
     <br>
     Use nestjs managed instances in any decorators gracefully
-    <h6>CAVEAT: <a>Use interceptor over this when it comes to controller
 </a></h6>
   </p>
 </div>
@@ -24,7 +23,6 @@
   <ol>
     <li><a href="#installation">Installation</a></li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#caveat">Caveat</a></li>
     <li><a href="#references">References</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -110,23 +108,6 @@ export class SomeService {
   }
 }
 ```
-
-
-<!-- CAVEAT -->
-## Caveat
-For now, lazy decorator does not support nestjs controller, [since OnModuleInit hooks are being called after router registration](https://github.com/nestjs/nest/blob/349840e0165b38de10e81ebce02b5c878124a9af/packages/core/nest-application.ts#L174-L175).
- 
-```typescript
-  // NestApplication.init
-  // ...
-  await this.registerRouter();
-  await this.callInitHook();
-```
-
-However, the controller's method have been already registered in the router before wrapping, so it does not work.
-<br>
-<br>
-Because Nestjs has Interceptors, we decided to leave this issue for a while even though we can solve it right now.
 
 
 <!-- REFERENCES -->
