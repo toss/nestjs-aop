@@ -21,8 +21,15 @@ export class FooService {
     return arg1 + arg2;
   }
 
-  async getFoo(id) {
+  async getFoo(id: number) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     return 'foo' + id;
   }
+  @Foo({ options: '1' })
+  thisTest() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    fooThisValue = this;
+  }
 }
+
+export let fooThisValue: any;

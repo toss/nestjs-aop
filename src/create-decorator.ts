@@ -23,16 +23,16 @@ export const createDecorator = (
       })(target, propertyKey, descriptor);
     },
     // 2. Wrap the method before the lazy decorator is executed
-    function (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+    (_: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
       const originalFn = descriptor.value;
 
-      descriptor.value = (...args: any[]) => {
-        if (target[propertyKey][aopSymbol]) {
+      descriptor.value = function (this: any, ...args: any[]) {
+        if (this[propertyKey][aopSymbol]) {
           // If there is a wrapper stored in the method, use it
-          return target[propertyKey][aopSymbol].apply(target, args);
+          return this[propertyKey][aopSymbol].apply(this, args);
         }
         // if there is no wrapper that comes out of method, call originalFn
-        return originalFn.apply(target, args);
+        return originalFn.apply(this, args);
       };
 
       Object.setPrototypeOf(descriptor.value, originalFn);

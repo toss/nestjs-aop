@@ -3,7 +3,8 @@ import 'reflect-metadata';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { AopModule } from '../aop.module';
-import { FooModule, FooService } from './fixture/foo';
+import { BarModule, BarService, barThisValue } from './fixture/bar';
+import { FooModule, FooService, fooThisValue } from './fixture/foo';
 
 describe('AopModule', () => {
   it('Lazy decoder overwrites the original function', async () => {
@@ -52,5 +53,33 @@ describe('AopModule', () => {
     expect(fooService.multipleDecorated('original', 0)).toMatchInlineSnapshot(
       `"original0:dependency_7:dependency_6:ts_decroator_5:ts_decroator_4:dependency_3:ts_decroator_2:dependency_1:dependency_0"`,
     );
+  });
+
+  describe('this of the decorated function must be this', () => {
+    it('With AopModule', async () => {
+      const module = await Test.createTestingModule({
+        imports: [AopModule, FooModule],
+      }).compile();
+
+      const app = module.createNestApplication(new FastifyAdapter());
+      await app.init();
+      const fooService = app.get(FooService);
+
+      fooService.thisTest();
+      expect(fooThisValue).toBe(fooService);
+    });
+
+    it('Without AopModule', async () => {
+      const module = await Test.createTestingModule({
+        imports: [BarModule],
+      }).compile();
+
+      const app = module.createNestApplication(new FastifyAdapter());
+      await app.init();
+      const barService = app.get(BarService);
+
+      barService.thisTest();
+      expect(barThisValue).toBe(barService);
+    });
   });
 });
