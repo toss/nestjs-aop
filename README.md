@@ -94,7 +94,7 @@ export class CacheModule {}
 `options` can be obtained from the warp method and used.
 
 ```typescript
-export const Cache = (options: CacheOptions) => createDecorator<CacheOptions>(CACHE_DECORATOR, options)
+export const Cache = (options: CacheOptions) => createDecorator(CACHE_DECORATOR, options)
 ```
 
 #### 6. Use it!
