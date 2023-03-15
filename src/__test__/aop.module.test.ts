@@ -53,4 +53,19 @@ describe('AopModule', () => {
       `"original0:dependency_7:dependency_6:ts_decroator_5:ts_decroator_4:dependency_3:ts_decroator_2:dependency_1:dependency_0"`,
     );
   });
+
+  it('this of the decorated function must be this', async () => {
+    const module = await Test.createTestingModule({
+      imports: [
+        // AopModule,
+        FooModule,
+      ],
+    }).compile();
+
+    const app = module.createNestApplication(new FastifyAdapter());
+    await app.init();
+    const fooService = app.get(FooService);
+    fooService.thisTest();
+    expect(fooService.thisValue).toBe(fooService);
+  });
 });

@@ -21,8 +21,14 @@ export class FooService {
     return arg1 + arg2;
   }
 
-  async getFoo(id) {
+  async getFoo(id: number) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     return 'foo' + id;
+  }
+
+  thisValue: any = undefined;
+  @Foo({ options: '1' })
+  thisTest() {
+    this.thisValue = this;
   }
 }
