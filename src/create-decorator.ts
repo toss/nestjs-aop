@@ -35,7 +35,12 @@ export const createDecorator = (
         return originalFn.apply(this, args);
       };
 
-      /** Swagger documentation will be displayed correctly only if this part is included. */
+      /**
+       * There are codes that using `function.name`.
+       * Therefore the codes below are necessary.
+       *
+       * ex) @nestjs/swagger
+       */
       Object.defineProperty(descriptor.value, 'name', {
         value: propertyKey.toString(),
         writable: false,
