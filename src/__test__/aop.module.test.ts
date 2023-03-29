@@ -5,6 +5,7 @@ import { Test } from '@nestjs/testing';
 import { AopModule } from '../aop.module';
 import { BarModule, BarService, barThisValue } from './fixture/bar';
 import { FooModule, FooService, fooThisValue } from './fixture/foo';
+import { FooController } from './fixture/foo/foo.controller';
 
 describe('AopModule', () => {
   it('Lazy decoder overwrites the original function', async () => {
@@ -53,6 +54,28 @@ describe('AopModule', () => {
     expect(fooService.multipleDecorated('original', 0)).toMatchInlineSnapshot(
       `"original0:dependency_7:dependency_6:ts_decroator_5:ts_decroator_4:dependency_3:ts_decroator_2:dependency_1:dependency_0"`,
     );
+  });
+
+  /**
+   * There are codes that using `function.name`.
+   * Therefore the codes below are necessary.
+   *
+   * ex) @nestjs/swagger
+   */
+  it('decorated function should have "name" property', async () => {
+    const module = await Test.createTestingModule({
+      imports: [AopModule, FooModule],
+    }).compile();
+    const app = module.createNestApplication(new FastifyAdapter());
+    await app.init();
+    const fooService = app.get(FooService);
+    const fooController = app.get(FooController);
+
+    expect(fooService.foo.name).toStrictEqual('foo');
+    expect(fooService.getFoo.name).toStrictEqual('getFoo');
+    expect(fooService.multipleDecorated.name).toStrictEqual('multipleDecorated');
+    expect(fooService.thisTest.name).toStrictEqual('thisTest');
+    expect(fooController.getFoo.name).toStrictEqual('getFoo');
   });
 
   describe('this of the decorated function must be this', () => {
