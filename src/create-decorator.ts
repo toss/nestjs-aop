@@ -35,6 +35,11 @@ export const createDecorator = (
         return originalFn.apply(this, args);
       };
 
+      /** Swagger documentation will be displayed correctly only if this part is included. */
+      Object.defineProperty(descriptor.value, 'name', {
+        value: propertyKey.toString(),
+        writable: false,
+      });
       Object.setPrototypeOf(descriptor.value, originalFn);
     },
   );
