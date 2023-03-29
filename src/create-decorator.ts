@@ -35,6 +35,16 @@ export const createDecorator = (
         return originalFn.apply(this, args);
       };
 
+      /**
+       * There are codes that using `function.name`.
+       * Therefore the codes below are necessary.
+       *
+       * ex) @nestjs/swagger
+       */
+      Object.defineProperty(descriptor.value, 'name', {
+        value: propertyKey.toString(),
+        writable: false,
+      });
       Object.setPrototypeOf(descriptor.value, originalFn);
     },
   );
