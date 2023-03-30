@@ -24,12 +24,12 @@ export class AutoAspectExecutor implements OnModuleInit {
       return;
     }
 
-    const singletonClassInstances = providers
+    const singletonWrapper = providers
       .concat(controllers)
-      .filter((wrapper) => wrapper.isDependencyTreeStatic())
       .filter(({ instance }) => instance && Object.getPrototypeOf(instance));
 
-    for (const { instance } of singletonClassInstances) {
+    for (const wrapper of singletonWrapper) {
+      const { instance } = wrapper;
       // Use scanFromPrototype for support nestjs 8
       const methodNames = this.metadataScanner.scanFromPrototype(
         instance,
@@ -47,6 +47,16 @@ export class AutoAspectExecutor implements OnModuleInit {
             aopSymbol: symbol;
           }[] = this.reflector.get(metadataKey, instance[methodName]);
           if (!metadataList) {
+            return;
+          }
+
+          // TODO: Support request scope providers
+          if (!wrapper.isDependencyTreeStatic()) {
+            console.warn(
+              `[${
+                wrapper.instance?.constructor?.name || 'Unknown'
+              }] "@tossteam/nestjs-aop" does not yet support request scope providers`,
+            );
             return;
           }
 
