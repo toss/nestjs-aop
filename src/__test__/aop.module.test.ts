@@ -5,6 +5,7 @@ import { Test } from '@nestjs/testing';
 import { AopModule } from '../aop.module';
 import { BarModule, BarService, barThisValue } from './fixture/bar';
 import { FooModule, FooService, fooThisValue } from './fixture/foo';
+import { DuplicateService } from './fixture/foo/duplicate.service';
 import { FooController } from './fixture/foo/foo.controller';
 
 describe('AopModule', () => {
@@ -104,5 +105,20 @@ describe('AopModule', () => {
       barService.thisTest();
       expect(barThisValue).toBe(barService);
     });
+  });
+
+  it('Each instance should have its dependencies applied correctly', async () => {
+    const module = await Test.createTestingModule({
+      imports: [AopModule, FooModule],
+    }).compile();
+
+    const app = module.createNestApplication(new FastifyAdapter());
+    await app.init();
+
+    const duplicateService1: DuplicateService = app.get('DUPLICATE_1');
+    const duplicateService2: DuplicateService = app.get('DUPLICATE_2');
+
+    expect(duplicateService1.getValue()).toMatchInlineSnapshot(`"1:dependency_value"`);
+    expect(duplicateService2.getValue()).toMatchInlineSnapshot(`"2:dependency_value"`);
   });
 });

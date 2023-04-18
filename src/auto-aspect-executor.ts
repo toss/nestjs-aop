@@ -67,8 +67,11 @@ export class AutoAspectExecutor implements OnModuleInit {
               method: originalFn.bind(instance),
               metadata,
             });
+
             Object.setPrototypeOf(wrappedMethod, instance[methodName]);
-            instance[methodName][aopSymbol] = wrappedMethod;
+
+            instance[aopSymbol] ??= {};
+            instance[aopSymbol][methodName] = wrappedMethod;
           }
         });
       }

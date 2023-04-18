@@ -27,9 +27,9 @@ export const createDecorator = (
       const originalFn = descriptor.value;
 
       descriptor.value = function (this: any, ...args: any[]) {
-        if (this[propertyKey][aopSymbol]) {
+        if (this[aopSymbol]?.[propertyKey]) {
           // If there is a wrapper stored in the method, use it
-          return this[propertyKey][aopSymbol].apply(this, args);
+          return this[aopSymbol][propertyKey].apply(this, args);
         }
         // if there is no wrapper that comes out of method, call originalFn
         return originalFn.apply(this, args);
