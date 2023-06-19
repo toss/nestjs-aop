@@ -7,7 +7,7 @@
   "license": "ISC",
   "engines": {
     "node": ">=16",
-    "pnpm": "^7"
+    "pnpm": "^8"
   },
   "scripts": {
     "test": "jest --maxWorkers 4",
