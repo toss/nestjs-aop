@@ -87,8 +87,10 @@ export class AutoAspectExecutor implements OnModuleInit {
         if (!instance || !metatype) {
           return false;
         }
+        const aspect =
+          reflector.get<string>(ASPECT, metatype) ||
+          reflector.get<string>(ASPECT, Object.getPrototypeOf(instance).constructor);
 
-        const aspect = reflector.get<string>(ASPECT, metatype);
         if (!aspect) {
           return false;
         }
