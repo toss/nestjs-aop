@@ -3,10 +3,15 @@ import 'reflect-metadata';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { AopModule } from '../aop.module';
+import { AopFactoryModule, AopFactoryService } from './fixture/aop-factory';
 import { BarModule, BarService, barThisValue } from './fixture/bar';
-import { FooModule, FooService, fooThisValue } from './fixture/foo';
-import { DuplicateService } from './fixture/foo/duplicate.service';
-import { FooController } from './fixture/foo/foo.controller';
+import {
+  DuplicateService,
+  FooController,
+  FooModule,
+  FooService,
+  fooThisValue,
+} from './fixture/foo';
 
 describe('AopModule', () => {
   it('Lazy decoder overwrites the original function', async () => {
@@ -120,5 +125,18 @@ describe('AopModule', () => {
 
     expect(duplicateService1.getValue()).toMatchInlineSnapshot(`"1:dependency_value"`);
     expect(duplicateService2.getValue()).toMatchInlineSnapshot(`"2:dependency_value"`);
+  });
+
+  it('AopDecorator created using useFactory should also be functional', async () => {
+    const module = await Test.createTestingModule({
+      imports: [AopModule, AopFactoryModule],
+    }).compile();
+
+    const app = module.createNestApplication(new FastifyAdapter());
+    await app.init();
+
+    const aopFactoryService: AopFactoryService = app.get(AopFactoryService);
+
+    expect(aopFactoryService.getValue('params')).toMatchInlineSnapshot(`"params:dependency_1"`);
   });
 });

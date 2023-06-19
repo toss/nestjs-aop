@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Foo } from '../foo';
+import { Foo } from './foo.decorator';
 
 @Injectable()
 export class DuplicateService {

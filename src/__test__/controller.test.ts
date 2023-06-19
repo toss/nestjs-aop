@@ -4,8 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import supertest from 'supertest';
 import { AopModule } from '../aop.module';
 import { CacheModule } from './fixture/cache';
-import { FooModule } from './fixture/foo';
-import { FooController } from './fixture/foo/foo.controller';
+import { FooController, FooModule } from './fixture/foo';
 
 describe('Controller', () => {
   let app: INestApplication;
