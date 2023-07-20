@@ -5,6 +5,7 @@ import supertest from 'supertest';
 import { AopModule } from '../aop.module';
 import { CacheModule } from './fixture/cache';
 import { FooController, FooModule } from './fixture/foo';
+import { BazModule } from './fixture/baz';
 
 describe('Controller', () => {
   let app: INestApplication;
@@ -12,7 +13,7 @@ describe('Controller', () => {
 
   beforeAll(async () => {
     moduleRef = await Test.createTestingModule({
-      imports: [AopModule, FooModule, CacheModule],
+      imports: [AopModule, FooModule, CacheModule, BazModule],
     }).compile();
 
     app = moduleRef.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -37,6 +38,13 @@ describe('Controller', () => {
     await requester.get('/foo').query({ id: 3 }).expect(200).expect('foo3');
 
     expect(fooController.getFooCount).toMatchInlineSnapshot(`3`);
+  });
+
+  it('With Baz Decorator applied, BazService method return request url included string properly', async () => {
+    const requester = supertest(app.getHttpServer());
+    const result = (await requester.get('/baz')).text;
+
+    expect(result).toMatchInlineSnapshot(`"/baz:dependency_0"`);
   });
 
   afterAll(async () => await app.close());
