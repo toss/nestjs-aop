@@ -12,7 +12,8 @@ import {
   FooService,
   fooThisValue,
 } from './fixture/foo';
-import { BazModule, BazService, bazThisValue } from './fixture/baz';
+import { BazDecorator, BazModule, BazService, StaticBazService, bazThisValue } from './fixture/baz';
+import { INestApplication } from '@nestjs/common';
 
 describe('AopModule', () => {
   it('Lazy decorator overwrites the original function', async () => {
@@ -178,5 +179,71 @@ describe('AopModule', () => {
     expect(aopFactoryRequestScopedService.getValue('params')).toMatchInlineSnapshot(
       `"params:dependency_1"`,
     );
+  });
+
+  describe('wrap method of lazy decorator should be called only once per decorator if instance is static', () => {
+    let bazService: StaticBazService, bazDecorator: BazDecorator;
+    beforeEach(async () => {
+      const module = await Test.createTestingModule({
+        imports: [AopModule, BazModule],
+      }).compile();
+
+      const app = module.createNestApplication(new FastifyAdapter());
+      await app.init();
+
+      bazService = app.get(StaticBazService);
+      bazDecorator = app.get(BazDecorator);
+    });
+    it('With once decorated', async () => {
+      expect(bazService.bazOnce()).toMatchInlineSnapshot(`"once:dependency_0"`);
+      expect(bazService.bazOnce()).toMatchInlineSnapshot(`"once:dependency_0"`);
+      expect(bazDecorator.getWrapCalledCnt()).toMatchInlineSnapshot(`1`);
+    });
+
+    it('with twice decorated', async () => {
+      expect(bazService.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
+      expect(bazService.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
+      expect(bazService.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
+      expect(bazDecorator.getWrapCalledCnt()).toMatchInlineSnapshot(`2`);
+    });
+  });
+
+  describe('wrap method of lazy decorator should be called per request and decorator if instance is request scoped', () => {
+    let bazDecorator: BazDecorator, app: INestApplication;
+    beforeEach(async () => {
+      const module = await Test.createTestingModule({
+        imports: [AopModule, BazModule],
+      }).compile();
+
+      app = module.createNestApplication(new FastifyAdapter());
+      await app.init();
+
+      bazDecorator = app.get(BazDecorator);
+    });
+    it('With once decorated', async () => {
+      const bazService: BazService = await app.resolve(BazService);
+      expect(bazService.bazOnce()).toMatchInlineSnapshot(`"once:dependency_0"`);
+      expect(bazService.bazOnce()).toMatchInlineSnapshot(`"once:dependency_0"`);
+      expect(bazDecorator.getWrapCalledCnt()).toMatchInlineSnapshot(`1`);
+
+      const bazService2: BazService = await app.resolve(BazService);
+      expect(bazService2.bazOnce()).toMatchInlineSnapshot(`"once:dependency_0"`);
+      expect(bazService2.bazOnce()).toMatchInlineSnapshot(`"once:dependency_0"`);
+      expect(bazDecorator.getWrapCalledCnt()).toMatchInlineSnapshot(`2`);
+    });
+
+    it('with twice decorated', async () => {
+      const bazService: BazService = await app.resolve(BazService);
+      expect(bazService.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
+      expect(bazService.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
+      expect(bazService.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
+      expect(bazDecorator.getWrapCalledCnt()).toMatchInlineSnapshot(`2`);
+
+      const bazService2: BazService = await app.resolve(BazService);
+      expect(bazService2.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
+      expect(bazService2.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
+      expect(bazService2.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
+      expect(bazDecorator.getWrapCalledCnt()).toMatchInlineSnapshot(`4`);
+    });
   });
 });

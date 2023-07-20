@@ -22,6 +22,31 @@ export class BazService {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     bazThisValue = this;
   }
+
+  @Baz({ options: '0' })
+  bazOnce() {
+    return 'once';
+  }
+
+  @Baz({ options: '0' })
+  @Baz({ options: '1' })
+  bazTwice() {
+    return 'twice';
+  }
 }
 
 export let bazThisValue: any;
+
+@Injectable()
+export class StaticBazService {
+  @Baz({ options: '0' })
+  bazOnce() {
+    return 'once';
+  }
+
+  @Baz({ options: '0' })
+  @Baz({ options: '1' })
+  bazTwice() {
+    return 'twice';
+  }
+}

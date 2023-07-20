@@ -1,6 +1,6 @@
 import { Module, Scope } from '@nestjs/common';
 import { BazDecorator } from './baz.decorator';
-import { BazService } from './baz.service';
+import { BazService, StaticBazService } from './baz.service';
 import { BazController } from './baz.controller';
 import { SampleModule } from '../sample';
 import { DuplicateService } from './duplicate.service';
@@ -21,6 +21,7 @@ import { DuplicateService } from './duplicate.service';
       scope: Scope.REQUEST,
       useValue: new DuplicateService(4),
     },
+    StaticBazService,
   ],
 })
 export class BazModule {}
