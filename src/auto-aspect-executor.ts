@@ -9,6 +9,7 @@ import { LazyDecorator } from './lazy-decorator';
  */
 @Injectable()
 export class AutoAspectExecutor implements OnModuleInit {
+  private readonly wrappedMethodCache = new WeakMap();
   constructor(
     private readonly discoveryService: DiscoveryService,
     private readonly metadataScanner: MetadataScanner,
@@ -56,12 +57,19 @@ export class AutoAspectExecutor implements OnModuleInit {
           for (const { originalFn, metadata, aopSymbol } of metadataList) {
             const proxy = new Proxy(target[methodName], {
               apply: (_, thisArg, args) => {
+                const cached = this.wrappedMethodCache.get(thisArg) || {};
+                if (cached[aopSymbol]?.[methodName]) {
+                  return Reflect.apply(cached[aopSymbol][methodName], lazyDecorator, args);
+                }
                 const wrappedMethod = lazyDecorator.wrap({
                   instance: thisArg,
                   methodName,
                   method: originalFn.bind(thisArg),
                   metadata,
                 });
+                cached[aopSymbol] ??= {};
+                cached[aopSymbol][methodName] = wrappedMethod;
+                this.wrappedMethodCache.set(thisArg, cached);
                 return Reflect.apply(wrappedMethod, lazyDecorator, args);
               },
             });
