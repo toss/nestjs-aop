@@ -15,7 +15,7 @@ export class AutoAspectExecutor implements OnModuleInit {
     private readonly reflector: Reflector,
   ) {}
 
-  onModuleInit() {
+  async onModuleInit() {
     const controllers = this.discoveryService.getControllers();
     const providers = this.discoveryService.getProviders();
 
@@ -24,16 +24,19 @@ export class AutoAspectExecutor implements OnModuleInit {
       return;
     }
 
-    const singletonWrapper = providers
+    const instanceWrappers = providers
       .concat(controllers)
       .filter(({ instance }) => instance && Object.getPrototypeOf(instance));
 
-    for (const wrapper of singletonWrapper) {
-      const { instance } = wrapper;
+    for (const wrapper of instanceWrappers) {
+      const target = wrapper.isDependencyTreeStatic()
+        ? wrapper.instance
+        : wrapper.metatype.prototype;
+
       // Use scanFromPrototype for support nestjs 8
       const methodNames = this.metadataScanner.scanFromPrototype(
-        instance,
-        Object.getPrototypeOf(instance),
+        target,
+        wrapper.isDependencyTreeStatic() ? Object.getPrototypeOf(target) : target,
         (name) => name,
       );
 
@@ -45,33 +48,26 @@ export class AutoAspectExecutor implements OnModuleInit {
             originalFn: any;
             metadata?: unknown;
             aopSymbol: symbol;
-          }[] = this.reflector.get(metadataKey, instance[methodName]);
+          }[] = this.reflector.get(metadataKey, target[methodName]);
           if (!metadataList) {
             return;
           }
 
-          // TODO: Support request scope providers
-          if (!wrapper.isDependencyTreeStatic()) {
-            console.warn(
-              `[${
-                wrapper.instance?.constructor?.name || 'Unknown'
-              }] "@tossteam/nestjs-aop" does not yet support request scope providers`,
-            );
-            return;
-          }
-
           for (const { originalFn, metadata, aopSymbol } of metadataList) {
-            const wrappedMethod = lazyDecorator.wrap({
-              instance,
-              methodName,
-              method: originalFn.bind(instance),
-              metadata,
+            const proxy = new Proxy(target[methodName], {
+              apply: (_, thisArg, args) => {
+                const wrappedMethod = lazyDecorator.wrap({
+                  instance: thisArg,
+                  methodName,
+                  method: originalFn.bind(thisArg),
+                  metadata,
+                });
+                return Reflect.apply(wrappedMethod, lazyDecorator, args);
+              },
             });
 
-            Object.setPrototypeOf(wrappedMethod, instance[methodName]);
-
-            instance[aopSymbol] ??= {};
-            instance[aopSymbol][methodName] = wrappedMethod;
+            target[aopSymbol] ??= {};
+            target[aopSymbol][methodName] = proxy;
           }
         });
       }
