@@ -16,7 +16,7 @@ export class AutoAspectExecutor implements OnModuleInit {
     private readonly reflector: Reflector,
   ) {}
 
-  async onModuleInit() {
+  onModuleInit() {
     const controllers = this.discoveryService.getControllers();
     const providers = this.discoveryService.getProviders();
 
@@ -70,7 +70,7 @@ export class AutoAspectExecutor implements OnModuleInit {
                 cached[aopSymbol] ??= {};
                 cached[aopSymbol][methodName] = wrappedMethod;
                 this.wrappedMethodCache.set(thisArg, cached);
-                return Reflect.apply(wrappedMethod, lazyDecorator, args);
+                return Reflect.apply(wrappedMethod, thisArg, args);
               },
             });
 
