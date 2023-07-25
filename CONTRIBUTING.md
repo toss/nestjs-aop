@@ -1,4 +1,4 @@
-# Contributing to Slash libraries
+# Contributing to nestjs-aop
 
 We welcome contribution from everyone in the community. <br/>
 All communications in this repo will be by English.

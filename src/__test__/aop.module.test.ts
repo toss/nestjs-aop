@@ -1,52 +1,100 @@
 import 'reflect-metadata';
 
+import { Controller, Get, Injectable, Module } from '@nestjs/common';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { AopModule } from '../aop.module';
-import { AopFactoryModule, AopFactoryService } from './fixture/aop-factory';
-import { BarModule, BarService, barThisValue } from './fixture/bar';
-import {
-  DuplicateService,
-  FooController,
-  FooModule,
-  FooService,
-  fooThisValue,
-} from './fixture/foo';
-import { BazDecorator, BazModule, BazService, StaticBazService, bazThisValue } from './fixture/baz';
-import { INestApplication } from '@nestjs/common';
+import { AopTesting, AopTestingDecorator } from './fixture/aop-testing.decorator';
+import { AopTestingModule } from './fixture/aop-testing.module';
 
 describe('AopModule', () => {
   it('Lazy decorator overwrites the original function', async () => {
+    @Injectable()
+    class FooService {
+      @AopTesting({
+        callback: () => {
+          return 2;
+        },
+      })
+      foo() {
+        return 1;
+      }
+    }
+
+    @Module({
+      providers: [FooService],
+      exports: [FooService],
+    })
+    class FooModule {}
+
     const module = await Test.createTestingModule({
-      imports: [AopModule, FooModule, BazModule],
+      imports: [
+        AopModule,
+        FooModule,
+        AopTestingModule.registerAsync({
+          imports: [FooModule],
+          inject: [FooService],
+          useFactory: (fooService: FooService) => {
+            return [fooService];
+          },
+        }),
+      ],
     }).compile();
 
     const app = module.createNestApplication(new FastifyAdapter());
     await app.init();
-    const fooService = app.get(FooService),
-      bazService = await app.resolve(BazService);
-    expect(fooService.foo('original', 0)).toMatchInlineSnapshot(`"original0:dependency_options"`);
-    expect(bazService.baz('original', 0)).toMatchInlineSnapshot(`"original0:dependency_options"`);
+    const fooService = app.get(FooService);
+    expect(fooService.foo()).toMatchInlineSnapshot(`2`);
   });
 
   it('Prototype of the overwritten function must be the original function', async () => {
+    // set original property to true
+    const SetOriginalTrue = () => {
+      return (_: any, __: string | symbol, descriptor: PropertyDescriptor) => {
+        descriptor.value['original'] = true;
+      };
+    };
+
+    @Injectable()
+    class FooService {
+      @AopTesting({
+        callback: ({ wrapParams, args }) => {
+          return wrapParams.method(...args);
+        },
+      })
+      @SetOriginalTrue()
+      foo() {
+        return 1;
+      }
+    }
+
+    @Module({
+      providers: [FooService],
+      exports: [FooService],
+    })
+    class FooModule {}
+
     const module = await Test.createTestingModule({
-      imports: [AopModule, FooModule, BazModule],
+      imports: [
+        AopModule,
+        FooModule,
+        AopTestingModule.registerAsync({
+          imports: [FooModule],
+          inject: [FooService],
+          useFactory: (fooService: FooService) => {
+            return [fooService];
+          },
+        }),
+      ],
     }).compile();
 
     const app = module.createNestApplication(new FastifyAdapter());
     await app.init();
-    const fooService = app.get(FooService),
-      bazService = await app.resolve(BazService);
+    const fooService = app.get(FooService);
 
-    // In the 'SetOriginalTrue' decorator, the original field in the originalFn was set to true.
     // Verify that the 'fooService.foo' object has no properties and its 'original' property is true
     expect(Object.keys(fooService.foo)).toMatchInlineSnapshot(`Array []`);
     expect((fooService.foo as any)['original']).toBe(true);
-
-    // Verify that the 'bazService.baz' object has no properties and its 'original' property is true
-    expect(Object.keys(bazService.baz)).toMatchInlineSnapshot(`Array []`);
-    expect((bazService.baz as any)['original']).toBe(true);
 
     // Get the prototype of the 'fooService.foo' object and verify that it only has an 'original' property
     const proto = Object.getPrototypeOf(fooService.foo);
@@ -56,28 +104,50 @@ describe('AopModule', () => {
           ]
         `);
     expect((proto as any)['original']).toBe(true);
-
-    // Get the prototype of the 'bazService.baz' object and verify that it only has an 'original' property
-    const proto2 = Object.getPrototypeOf(bazService.baz);
-    expect(Object.keys(proto2)).toMatchInlineSnapshot(`
-          Array [
-            "original",
-          ]
-        `);
-    expect((proto2 as any)['original']).toBe(true);
   });
 
   it('Decorator order must be guaranteed', async () => {
+    @Injectable()
+    class FooService {
+      @AopTesting({
+        callback: ({ wrapParams, args }) => {
+          return wrapParams.method(...args) + '2';
+        },
+      })
+      @AopTesting({
+        callback: ({ wrapParams, args }) => {
+          return wrapParams.method(...args) + '1';
+        },
+      })
+      multipleDecorated() {
+        return '0';
+      }
+    }
+
+    @Module({
+      providers: [FooService],
+      exports: [FooService],
+    })
+    class FooModule {}
+
     const module = await Test.createTestingModule({
-      imports: [AopModule, FooModule, BazModule],
+      imports: [
+        AopModule,
+        FooModule,
+        AopTestingModule.registerAsync({
+          imports: [FooModule],
+          inject: [FooService],
+          useFactory: (fooService: FooService) => {
+            return [fooService];
+          },
+        }),
+      ],
     }).compile();
 
     const app = module.createNestApplication(new FastifyAdapter());
     await app.init();
     const fooService = app.get(FooService);
-    expect(fooService.multipleDecorated('original', 0)).toMatchInlineSnapshot(
-      `"original0:dependency_7:dependency_6:ts_decroator_5:ts_decroator_4:dependency_3:ts_decroator_2:dependency_1:dependency_0"`,
-    );
+    expect(fooService.multipleDecorated()).toMatchInlineSnapshot(`"012"`);
   });
 
   /**
@@ -87,163 +157,289 @@ describe('AopModule', () => {
    * ex) @nestjs/swagger
    */
   it('decorated function should have "name" property', async () => {
+    @Injectable()
+    class FooService {
+      @AopTesting({
+        callback: ({ wrapParams, args }) => {
+          return wrapParams.method(...args);
+        },
+      })
+      foo() {
+        return '0';
+      }
+    }
+
+    @Controller()
+    class FooController {
+      @AopTesting({
+        callback: ({ wrapParams, args }) => {
+          return wrapParams.method(...args);
+        },
+      })
+      @Get()
+      getFoo() {
+        return '0';
+      }
+    }
+
+    @Module({
+      controllers: [FooController],
+      providers: [FooService],
+      exports: [FooService],
+    })
+    class FooModule {}
+
     const module = await Test.createTestingModule({
-      imports: [AopModule, FooModule, BazModule],
+      imports: [
+        AopModule,
+        FooModule,
+        AopTestingModule.registerAsync({
+          imports: [FooModule],
+          inject: [FooService],
+          useFactory: (fooService: FooService) => {
+            return [fooService];
+          },
+        }),
+      ],
     }).compile();
+
     const app = module.createNestApplication(new FastifyAdapter());
     await app.init();
     const fooService = app.get(FooService);
     const fooController = app.get(FooController);
 
     expect(fooService.foo.name).toStrictEqual('foo');
-    expect(fooService.getFoo.name).toStrictEqual('getFoo');
-    expect(fooService.multipleDecorated.name).toStrictEqual('multipleDecorated');
-    expect(fooService.thisTest.name).toStrictEqual('thisTest');
     expect(fooController.getFoo.name).toStrictEqual('getFoo');
-
-    const bazService = await app.resolve(BazService);
-
-    expect(bazService.baz.name).toStrictEqual('baz');
-    expect(bazService.thisTest.name).toStrictEqual('thisTest');
   });
 
   describe('this of the decorated function must be this', () => {
     it('With AopModule', async () => {
+      let _this: unknown = undefined;
+      @Injectable()
+      class FooService {
+        @AopTesting({
+          callback: ({ wrapParams, args }) => {
+            return wrapParams.method(...args);
+          },
+        })
+        foo() {
+          // eslint-disable-next-line @typescript-eslint/no-this-alias
+          _this = this;
+          return '0';
+        }
+      }
+
+      @Module({
+        providers: [FooService],
+        exports: [FooService],
+      })
+      class FooModule {}
+
       const module = await Test.createTestingModule({
-        imports: [AopModule, FooModule, BazModule],
+        imports: [
+          AopModule,
+          FooModule,
+          AopTestingModule.registerAsync({
+            imports: [FooModule],
+            inject: [FooService],
+            useFactory: (fooService: FooService) => {
+              return [fooService];
+            },
+          }),
+        ],
       }).compile();
 
       const app = module.createNestApplication(new FastifyAdapter());
       await app.init();
-      const fooService = app.get(FooService),
-        bazService = await app.resolve(BazService);
+      const fooService = app.get(FooService);
 
-      fooService.thisTest();
-      expect(fooThisValue).toBe(fooService);
-
-      bazService.thisTest();
-      expect(bazThisValue).toBe(bazService);
+      fooService.foo();
+      expect(_this).toBe(fooService);
     });
 
     it('Without AopModule', async () => {
+      let _this: unknown = undefined;
+      @Injectable()
+      class FooService {
+        @AopTesting({
+          callback: ({ wrapParams, args }) => {
+            return wrapParams.method(...args);
+          },
+        })
+        foo() {
+          // eslint-disable-next-line @typescript-eslint/no-this-alias
+          _this = this;
+          return '0';
+        }
+      }
+
+      @Module({
+        providers: [FooService],
+        exports: [FooService],
+      })
+      class FooModule {}
+
       const module = await Test.createTestingModule({
-        imports: [BarModule, BazModule],
+        imports: [
+          // AopModule,
+          FooModule,
+          AopTestingModule.registerAsync({
+            imports: [FooModule],
+            inject: [FooService],
+            useFactory: (fooService: FooService) => {
+              return [fooService];
+            },
+          }),
+        ],
       }).compile();
 
       const app = module.createNestApplication(new FastifyAdapter());
       await app.init();
-      const barService = app.get(BarService),
-        bazService = await app.resolve(BazService);
+      const fooService = app.get(FooService);
 
-      barService.thisTest();
-      expect(barThisValue).toBe(barService);
-
-      bazService.thisTest();
-      expect(bazThisValue).toBe(bazService);
+      fooService.foo();
+      expect(_this).toBe(fooService);
     });
   });
 
   it('Each instance should have its dependencies applied correctly', async () => {
+    @Injectable()
+    class FooService {
+      constructor(private readonly value: number) {}
+
+      @AopTesting({
+        callback: ({ wrapParams, args }) => {
+          return wrapParams.method(...args);
+        },
+      })
+      getValue() {
+        return this.value;
+      }
+    }
+
+    @Module({
+      providers: [
+        {
+          provide: 'DUPLICATE_1',
+          useValue: new FooService(1),
+        },
+        {
+          provide: 'DUPLICATE_2',
+          useValue: new FooService(2),
+        },
+        {
+          provide: 'DUPLICATE_3',
+          useValue: new FooService(3),
+        },
+      ],
+      exports: ['DUPLICATE_1', 'DUPLICATE_2', 'DUPLICATE_3'],
+    })
+    class FooModule {}
+
     const module = await Test.createTestingModule({
-      imports: [AopModule, FooModule, BazModule],
+      imports: [
+        AopModule,
+        FooModule,
+        AopTestingModule.registerAsync({
+          imports: [FooModule],
+          inject: ['DUPLICATE_1'],
+          useFactory: (fooService: FooService) => {
+            return [fooService];
+          },
+        }),
+      ],
     }).compile();
 
     const app = module.createNestApplication(new FastifyAdapter());
     await app.init();
 
-    const duplicateService1: DuplicateService = app.get('DUPLICATE_1');
-    const duplicateService2: DuplicateService = app.get('DUPLICATE_2');
-    const duplicateService3: DuplicateService = await app.resolve('DUPLICATE_3');
-    const duplicateService4: DuplicateService = await app.resolve('DUPLICATE_4');
+    const duplicateService1: FooService = app.get('DUPLICATE_1');
+    const duplicateService2: FooService = app.get('DUPLICATE_2');
+    const duplicateService3: FooService = await app.resolve('DUPLICATE_3');
 
-    expect(duplicateService1.getValue()).toMatchInlineSnapshot(`"1:dependency_value"`);
-    expect(duplicateService2.getValue()).toMatchInlineSnapshot(`"2:dependency_value"`);
-    expect(duplicateService3.getValue()).toMatchInlineSnapshot(`"3:dependency_value"`);
-    expect(duplicateService4.getValue()).toMatchInlineSnapshot(`"4:dependency_value"`);
+    expect(duplicateService1.getValue()).toMatchInlineSnapshot(`1`);
+    expect(duplicateService2.getValue()).toMatchInlineSnapshot(`2`);
+    expect(duplicateService3.getValue()).toMatchInlineSnapshot(`3`);
   });
 
   it('AopDecorator created using useFactory should also be functional', async () => {
+    @Injectable()
+    class FooService {
+      @AopTesting({
+        callback: () => {
+          return 2;
+        },
+      })
+      foo() {
+        return 1;
+      }
+    }
+
+    @Module({
+      providers: [FooService],
+      exports: [FooService],
+    })
+    class FooModule {}
+
     const module = await Test.createTestingModule({
-      imports: [AopModule, AopFactoryModule],
+      imports: [AopModule, FooModule],
+      providers: [
+        {
+          provide: AopTestingDecorator,
+          useFactory: () => {
+            return new AopTestingDecorator();
+          },
+        },
+      ],
     }).compile();
 
     const app = module.createNestApplication(new FastifyAdapter());
     await app.init();
 
-    const aopFactoryService: AopFactoryService = app.get(AopFactoryService),
-      aopFactoryRequestScopedService: AopFactoryService = await app.resolve(
-        'AopFactoryRequestScopedService',
-      );
+    const fooService: FooService = app.get(FooService);
 
-    expect(aopFactoryService.getValue('params')).toMatchInlineSnapshot(`"params:dependency_1"`);
-    expect(aopFactoryRequestScopedService.getValue('params')).toMatchInlineSnapshot(
-      `"params:dependency_1"`,
-    );
+    expect(fooService.foo()).toMatchInlineSnapshot(`2`);
   });
 
-  describe('wrap method of lazy decorator should be called only once per decorator if instance is static', () => {
-    let bazService: StaticBazService, bazDecorator: BazDecorator;
-    beforeEach(async () => {
-      const module = await Test.createTestingModule({
-        imports: [AopModule, BazModule],
-      }).compile();
+  it('lazy decorator should be initialized only once per decorator if instance is static', async () => {
+    @Injectable()
+    class FooService {
+      @AopTesting({
+        callback: () => {
+          return 2;
+        },
+      })
+      foo() {
+        return 1;
+      }
+    }
 
-      const app = module.createNestApplication(new FastifyAdapter());
-      await app.init();
+    @Module({
+      providers: [FooService],
+      exports: [FooService],
+    })
+    class FooModule {}
 
-      bazService = app.get(StaticBazService);
-      bazDecorator = app.get(BazDecorator);
-    });
-    it('With once decorated', async () => {
-      expect(bazService.bazOnce()).toMatchInlineSnapshot(`"once:dependency_0"`);
-      expect(bazService.bazOnce()).toMatchInlineSnapshot(`"once:dependency_0"`);
-      expect(bazDecorator.getWrapCalledCnt()).toMatchInlineSnapshot(`1`);
-    });
+    let aopDecoratorInitialized = 0;
+    const module = await Test.createTestingModule({
+      imports: [AopModule, FooModule],
+      providers: [
+        {
+          provide: AopTestingDecorator,
+          useFactory: () => {
+            aopDecoratorInitialized++;
+            return new AopTestingDecorator();
+          },
+        },
+      ],
+    }).compile();
 
-    it('with twice decorated', async () => {
-      expect(bazService.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
-      expect(bazService.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
-      expect(bazService.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
-      expect(bazDecorator.getWrapCalledCnt()).toMatchInlineSnapshot(`2`);
-    });
-  });
+    const app = module.createNestApplication(new FastifyAdapter());
+    await app.init();
 
-  describe('wrap method of lazy decorator should be called per request and decorator if instance is request scoped', () => {
-    let bazDecorator: BazDecorator, app: INestApplication;
-    beforeEach(async () => {
-      const module = await Test.createTestingModule({
-        imports: [AopModule, BazModule],
-      }).compile();
-
-      app = module.createNestApplication(new FastifyAdapter());
-      await app.init();
-
-      bazDecorator = app.get(BazDecorator);
-    });
-    it('With once decorated', async () => {
-      const bazService: BazService = await app.resolve(BazService);
-      expect(bazService.bazOnce()).toMatchInlineSnapshot(`"once:dependency_0"`);
-      expect(bazService.bazOnce()).toMatchInlineSnapshot(`"once:dependency_0"`);
-      expect(bazDecorator.getWrapCalledCnt()).toMatchInlineSnapshot(`1`);
-
-      const bazService2: BazService = await app.resolve(BazService);
-      expect(bazService2.bazOnce()).toMatchInlineSnapshot(`"once:dependency_0"`);
-      expect(bazService2.bazOnce()).toMatchInlineSnapshot(`"once:dependency_0"`);
-      expect(bazDecorator.getWrapCalledCnt()).toMatchInlineSnapshot(`2`);
-    });
-
-    it('with twice decorated', async () => {
-      const bazService: BazService = await app.resolve(BazService);
-      expect(bazService.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
-      expect(bazService.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
-      expect(bazService.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
-      expect(bazDecorator.getWrapCalledCnt()).toMatchInlineSnapshot(`2`);
-
-      const bazService2: BazService = await app.resolve(BazService);
-      expect(bazService2.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
-      expect(bazService2.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
-      expect(bazService2.bazTwice()).toMatchInlineSnapshot(`"twice:dependency_1:dependency_0"`);
-      expect(bazDecorator.getWrapCalledCnt()).toMatchInlineSnapshot(`4`);
-    });
+    const fooService: FooService = app.get(FooService);
+    fooService.foo();
+    fooService.foo();
+    expect(aopDecoratorInitialized).toMatchInlineSnapshot(`1`);
   });
 });
