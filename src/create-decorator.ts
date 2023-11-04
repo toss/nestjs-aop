@@ -12,7 +12,7 @@ export const createDecorator = (
   const aopSymbol = Symbol('AOP_DECORATOR');
   return applyDecorators(
     // 1. Add metadata to the method
-    (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
+    (target: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
       return AddMetadata<
         symbol | string,
         { metadata?: unknown; aopSymbol: symbol; originalFn: unknown }
@@ -23,10 +23,10 @@ export const createDecorator = (
       })(target, propertyKey, descriptor);
     },
     // 2. Wrap the method before the lazy decorator is executed
-    (_: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
+    (_: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
       const originalFn = descriptor.value;
 
-      descriptor.value = function (this: any, ...args: any[]) {
+      descriptor.value = function (this: any, ...args: unknown[]) {
         if (this[aopSymbol]?.[propertyKey]) {
           // If there is a wrapper stored in the method, use it
           return this[aopSymbol][propertyKey].apply(this, args);

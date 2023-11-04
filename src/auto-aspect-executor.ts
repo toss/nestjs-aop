@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, MetadataScanner, Reflector } from '@nestjs/core';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 import { ASPECT } from './aspect';
+import { AnyFunction } from './core/types';
 import { LazyDecorator } from './lazy-decorator';
 
 /**
@@ -46,36 +47,43 @@ export class AutoAspectExecutor implements OnModuleInit {
           const metadataKey = this.reflector.get(ASPECT, lazyDecorator.constructor);
 
           const metadataList: {
-            originalFn: any;
+            originalFn: AnyFunction;
             metadata?: unknown;
             aopSymbol: symbol;
-          }[] = this.reflector.get(metadataKey, target[methodName]);
+          }[] = this.reflector.get<
+            {
+              originalFn: AnyFunction;
+              metadata?: unknown;
+              aopSymbol: symbol;
+            }[]
+          >(metadataKey, target[methodName]);
           if (!metadataList) {
             return;
           }
 
-          for (const { originalFn, metadata, aopSymbol } of metadataList) {
-            const proxy = new Proxy(target[methodName], {
-              apply: (_, thisArg, args) => {
-                const cached = this.wrappedMethodCache.get(thisArg) || {};
-                if (cached[aopSymbol]?.[methodName]) {
-                  return Reflect.apply(cached[aopSymbol][methodName], lazyDecorator, args);
-                }
-                const wrappedMethod = lazyDecorator.wrap({
-                  instance: thisArg,
-                  methodName,
-                  method: originalFn.bind(thisArg),
-                  metadata,
-                });
-                cached[aopSymbol] ??= {};
-                cached[aopSymbol][methodName] = wrappedMethod;
-                this.wrappedMethodCache.set(thisArg, cached);
-                return Reflect.apply(wrappedMethod, thisArg, args);
-              },
-            });
+          for (const item of metadataList) {
+            const { originalFn, metadata, aopSymbol } = item;
+
+            // eslint-disable-next-line @typescript-eslint/no-this-alias
+            const self = this;
+            function wrap(this: object, ...args: unknown[]) {
+              const cached = self.wrappedMethodCache.get(item);
+              if (cached) {
+                return cached.apply(this, args);
+              }
+
+              const wrappedMethod = lazyDecorator.wrap({
+                instance: this,
+                methodName,
+                method: originalFn.bind(this),
+                metadata,
+              });
+              self.wrappedMethodCache.set(this, wrappedMethod);
+              return wrappedMethod.apply(this, args);
+            }
 
             target[aopSymbol] ??= {};
-            target[aopSymbol][methodName] = proxy;
+            target[aopSymbol][methodName] = wrap;
           }
         });
       }
