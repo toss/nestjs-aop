@@ -83,7 +83,7 @@ export class AutoAspectExecutor implements OnModuleInit {
   }) {
     const { originalFn, metadata, aopSymbol } = aopMetadata;
 
-    const proxy = new Proxy(target[methodName], {
+    const proxy = new Proxy(originalFn, {
       apply: (_, thisArg, args) => {
         const cached = this.wrappedMethodCache.get(aopMetadata);
         if (cached) {
