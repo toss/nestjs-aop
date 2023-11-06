@@ -1,4 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
+import { AopMetadata } from './core/types';
 import { AddMetadata } from './utils';
 
 /**
@@ -13,10 +14,7 @@ export const createDecorator = (
   return applyDecorators(
     // 1. Add metadata to the method
     (target: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
-      return AddMetadata<
-        symbol | string,
-        { metadata?: unknown; aopSymbol: symbol; originalFn: unknown }
-      >(metadataKey, {
+      return AddMetadata<symbol | string, AopMetadata>(metadataKey, {
         originalFn: descriptor.value,
         metadata,
         aopSymbol,
