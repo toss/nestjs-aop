@@ -1,4 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
+import { AopMetadata } from './core/types';
 import { AddMetadata } from './utils';
 
 /**
@@ -12,24 +13,22 @@ export const createDecorator = (
   const aopSymbol = Symbol('AOP_DECORATOR');
   return applyDecorators(
     // 1. Add metadata to the method
-    (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
-      return AddMetadata<
-        symbol | string,
-        { metadata?: unknown; aopSymbol: symbol; originalFn: unknown }
-      >(metadataKey, {
+    (target: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
+      return AddMetadata<symbol | string, AopMetadata>(metadataKey, {
         originalFn: descriptor.value,
         metadata,
         aopSymbol,
       })(target, propertyKey, descriptor);
     },
     // 2. Wrap the method before the lazy decorator is executed
-    (_: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
+    (_: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
       const originalFn = descriptor.value;
 
-      descriptor.value = function (this: any, ...args: any[]) {
-        if (this[aopSymbol]?.[propertyKey]) {
+      descriptor.value = function (this: any, ...args: unknown[]) {
+        const wrappedFn = this[aopSymbol]?.[propertyKey];
+        if (wrappedFn) {
           // If there is a wrapper stored in the method, use it
-          return this[aopSymbol][propertyKey].apply(this, args);
+          return wrappedFn.apply(this, args);
         }
         // if there is no wrapper that comes out of method, call originalFn
         return originalFn.apply(this, args);
