@@ -83,26 +83,26 @@ export class AutoAspectExecutor implements OnModuleInit {
   }) {
     const { originalFn, metadata, aopSymbol } = aopMetadata;
 
-    const proxy = new Proxy(originalFn, {
-      apply: (_, thisArg, args) => {
-        const cached = this.wrappedMethodCache.get(aopMetadata);
-        if (cached) {
-          return cached.apply(thisArg, args);
-        }
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const self = this;
+    const wrappedFn = function (this: object, ...args: unknown[]) {
+      const cached = self.wrappedMethodCache.get(aopMetadata);
+      if (cached) {
+        return cached.apply(this, args);
+      }
 
-        const wrappedMethod = lazyDecorator.wrap({
-          instance: thisArg,
-          methodName,
-          method: originalFn.bind(thisArg),
-          metadata,
-        });
-        this.wrappedMethodCache.set(thisArg, wrappedMethod);
-        return wrappedMethod.apply(thisArg, args);
-      },
-    });
+      const wrappedMethod = lazyDecorator.wrap({
+        instance: this,
+        methodName,
+        method: originalFn.bind(this),
+        metadata,
+      });
+      self.wrappedMethodCache.set(this, wrappedMethod);
+      return wrappedMethod.apply(this, args);
+    };
 
     target[aopSymbol] ??= {};
-    target[aopSymbol][methodName] = proxy;
+    target[aopSymbol][methodName] = wrappedFn;
   }
 
   private lookupLazyDecorators(providers: InstanceWrapper[]): LazyDecorator[] {
