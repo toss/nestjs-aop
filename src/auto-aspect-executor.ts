@@ -86,7 +86,8 @@ export class AutoAspectExecutor implements OnModuleInit {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const wrappedFn = function (this: object, ...args: unknown[]) {
-      const cached = self.wrappedMethodCache.get(aopMetadata);
+      const cache = self.wrappedMethodCache.get(this) || new WeakMap();
+      const cached = cache.get(originalFn);
       if (cached) {
         return cached.apply(this, args);
       }
@@ -97,7 +98,8 @@ export class AutoAspectExecutor implements OnModuleInit {
         method: originalFn.bind(this),
         metadata,
       });
-      self.wrappedMethodCache.set(this, wrappedMethod);
+      cache.set(originalFn, wrappedMethod);
+      self.wrappedMethodCache.set(this, cache);
       return wrappedMethod.apply(this, args);
     };
 

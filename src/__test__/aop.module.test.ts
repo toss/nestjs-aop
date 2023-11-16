@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { Controller, Get, Injectable, Module } from '@nestjs/common';
+import { Controller, Get, Injectable, Module, Scope } from '@nestjs/common';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { AopModule } from '../aop.module';
@@ -148,6 +148,50 @@ describe('AopModule', () => {
     await app.init();
     const fooService = app.get(FooService);
     expect(fooService.multipleDecorated()).toMatchInlineSnapshot(`"012"`);
+  });
+
+  it('Wrap should be executed only once in default scope', async () => {
+    let wrapped = 0;
+    @Injectable({ scope: Scope.DEFAULT })
+    class FooService {
+      @AopTesting({
+        wrapCallback: () => {
+          wrapped++;
+        },
+      })
+      decorated() {
+        return '0';
+      }
+    }
+
+    @Module({
+      providers: [FooService],
+      exports: [FooService],
+    })
+    class FooModule {}
+
+    const module = await Test.createTestingModule({
+      imports: [
+        AopModule,
+        FooModule,
+        AopTestingModule.registerAsync({
+          imports: [FooModule],
+          inject: [FooService],
+          useFactory: (fooService: FooService) => {
+            return [fooService];
+          },
+        }),
+      ],
+    }).compile();
+
+    const app = module.createNestApplication(new FastifyAdapter());
+    await app.init();
+    const fooService = app.get(FooService);
+    fooService.decorated();
+    fooService.decorated();
+    fooService.decorated();
+
+    expect(wrapped).toBe(1);
   });
 
   /**
