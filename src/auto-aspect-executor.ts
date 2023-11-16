@@ -97,7 +97,7 @@ export class AutoAspectExecutor implements OnModuleInit {
         method: originalFn.bind(this),
         metadata,
       });
-      self.wrappedMethodCache.set(this, wrappedMethod);
+      self.wrappedMethodCache.set(aopMetadata, wrappedMethod);
       return wrappedMethod.apply(this, args);
     };
 
