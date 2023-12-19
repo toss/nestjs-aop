@@ -15,7 +15,7 @@ export class AutoAspectExecutor implements OnModuleInit {
     private readonly discoveryService: DiscoveryService,
     private readonly metadataScanner: MetadataScanner,
     private readonly reflector: Reflector,
-  ) {}
+  ) { }
 
   onModuleInit() {
     this.bootstrapLazyDecorators();
@@ -56,9 +56,16 @@ export class AutoAspectExecutor implements OnModuleInit {
     const metadataKey = this.reflector.get(ASPECT, lazyDecorator.constructor);
     // instance에 method names 를 순회하면서 lazyDecorator.wrap을 적용함
     for (const methodName of methodNames) {
+      // the target method is must be object or function
+      // @see: https://github.com/rbuckton/reflect-metadata/blob/9562d6395cc3901eaafaf8a6ed8bc327111853d5/Reflect.ts#L938
+      const targetMethod = target[methodName];
+      if (!targetMethod || (typeof targetMethod !== "object" && typeof targetMethod !== "function")) {
+        continue;
+      }
+
       const metadataList: AopMetadata[] = this.reflector.get<AopMetadata[]>(
         metadataKey,
-        target[methodName],
+        targetMethod,
       );
       if (!metadataList) {
         continue;
