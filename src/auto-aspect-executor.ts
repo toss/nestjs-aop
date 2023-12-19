@@ -61,7 +61,7 @@ export class AutoAspectExecutor implements OnModuleInit {
         target[methodName],
       );
       if (!metadataList) {
-        return;
+        continue;
       }
 
       for (const aopMetadata of metadataList) {
