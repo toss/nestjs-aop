@@ -15,7 +15,7 @@ export class AutoAspectExecutor implements OnModuleInit {
     private readonly discoveryService: DiscoveryService,
     private readonly metadataScanner: MetadataScanner,
     private readonly reflector: Reflector,
-  ) { }
+  ) {}
 
   onModuleInit() {
     this.bootstrapLazyDecorators();
