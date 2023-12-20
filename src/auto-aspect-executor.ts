@@ -47,7 +47,7 @@ export class AutoAspectExecutor implements OnModuleInit {
       : instanceWrapper.metatype.prototype;
 
     // Use scanFromPrototype for support nestjs 8
-    const methodNames = this.metadataScanner.scanFromPrototype(
+    const propertyKeys = this.metadataScanner.scanFromPrototype(
       target,
       instanceWrapper.isDependencyTreeStatic() ? Object.getPrototypeOf(target) : target,
       (name) => name,
@@ -55,24 +55,24 @@ export class AutoAspectExecutor implements OnModuleInit {
 
     const metadataKey = this.reflector.get(ASPECT, lazyDecorator.constructor);
     // instance에 method names 를 순회하면서 lazyDecorator.wrap을 적용함
-    for (const methodName of methodNames) {
+    for (const propertyKey of propertyKeys) {
       // the target method is must be object or function
       // @see: https://github.com/rbuckton/reflect-metadata/blob/9562d6395cc3901eaafaf8a6ed8bc327111853d5/Reflect.ts#L938
-      const targetMethod = target[methodName];
-      if (!targetMethod || (typeof targetMethod !== "object" && typeof targetMethod !== "function")) {
+      const targetProperty = target[propertyKey];
+      if (!targetProperty || (typeof targetProperty !== "object" && typeof targetProperty !== "function")) {
         continue;
       }
 
       const metadataList: AopMetadata[] = this.reflector.get<AopMetadata[]>(
         metadataKey,
-        targetMethod,
+        targetProperty,
       );
       if (!metadataList) {
         continue;
       }
 
       for (const aopMetadata of metadataList) {
-        this.wrapMethod({ lazyDecorator, aopMetadata, methodName, target });
+        this.wrapMethod({ lazyDecorator, aopMetadata, methodName: propertyKey, target });
       }
     }
   }
