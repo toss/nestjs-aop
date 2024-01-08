@@ -8,6 +8,43 @@ import { AopTesting, AopTestingDecorator } from './fixture/aop-testing.decorator
 import { AopTestingModule } from './fixture/aop-testing.module';
 
 describe('AopModule', () => {
+  it('Lazy decorator with init method must call it when AopModule has been initalized', async () => {
+    @Injectable()
+    class FooService {
+      @AopTesting({
+        initializingValue: true,
+      })
+      foo() {
+        return 1;
+      }
+    }
+
+    @Module({
+      providers: [FooService],
+      exports: [FooService],
+    })
+    class FooModule {}
+
+    const module = await Test.createTestingModule({
+      imports: [
+        AopModule,
+        FooModule,
+        AopTestingModule.registerAsync({
+          imports: [FooModule],
+          inject: [FooService],
+          useFactory: (fooService: FooService) => {
+            return [fooService];
+          },
+        }),
+      ],
+    }).compile();
+
+    const app = module.createNestApplication(new FastifyAdapter());
+    await app.init();
+    const fooService = app.get(FooService);
+    expect(Reflect.getMetadata('initializingValue', fooService.foo)).toBe(true);
+  });
+
   it('Lazy decorator overwrites the original function', async () => {
     @Injectable()
     class FooService {

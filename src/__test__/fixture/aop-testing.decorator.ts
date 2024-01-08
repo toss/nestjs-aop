@@ -1,10 +1,11 @@
 import { Aspect } from '../../aspect';
 import { createDecorator } from '../../create-decorator';
-import { LazyDecorator, WrapParams } from '../../lazy-decorator';
+import { InitParams, LazyDecorator, WrapParams } from '../../lazy-decorator';
 
 export const AOP_TESTING = Symbol('AOP_TESTING');
 
 type AopTestingOptions = {
+  initializingValue?: boolean;
   callback?: (params: {
     args: any[];
     wrapParams: WrapParams<any, AopTestingOptions>;
@@ -25,6 +26,12 @@ export class AopTestingDecorator implements LazyDecorator {
 
   constructor(...dependencies: any[]) {
     this.dependencies = dependencies;
+  }
+
+  init(params: InitParams<any, AopTestingOptions>) {
+    if (params.metadata.initializingValue) {
+      Reflect.defineMetadata('initializingValue', true, params.unboundMethod);
+    }
   }
 
   wrap(params: WrapParams<any, AopTestingOptions>) {

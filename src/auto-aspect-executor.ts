@@ -5,6 +5,13 @@ import { ASPECT } from './aspect';
 import { AopMetadata } from './core/types';
 import { LazyDecorator } from './lazy-decorator';
 
+type MethodPatchingParameters = {
+  lazyDecorator: LazyDecorator;
+  aopMetadata: AopMetadata;
+  methodName: string;
+  target: any;
+}
+
 /**
  * Aspect 가 선언되어 있고 LazyDecorator 가 구현되어 있는 provider 가 있는 경우 ioc 에 등록된 모든 provider 를 순회하면서 LazyDecorator 를 적용함.
  */
@@ -72,9 +79,29 @@ export class AutoAspectExecutor implements OnModuleInit {
       }
 
       for (const aopMetadata of metadataList) {
+        this.initMethod({ lazyDecorator, aopMetadata, methodName: propertyKey, target });
         this.wrapMethod({ lazyDecorator, aopMetadata, methodName: propertyKey, target });
       }
     }
+  }
+
+  private initMethod({
+    lazyDecorator,
+    aopMetadata,
+    methodName,
+    target,
+  }: MethodPatchingParameters) {
+    const { originalFn, metadata, aopSymbol } = aopMetadata;
+
+    /* The parameter must reference the 'unbound' method to use reflection for the method. */
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const targetInstance = target[aopSymbol] ?? {};
+    lazyDecorator.init?.({
+      instance: targetInstance,
+      methodName,
+      metadata,
+      unboundMethod: originalFn,
+    });
   }
 
   private wrapMethod({
@@ -82,12 +109,7 @@ export class AutoAspectExecutor implements OnModuleInit {
     aopMetadata,
     methodName,
     target,
-  }: {
-    lazyDecorator: LazyDecorator;
-    aopMetadata: AopMetadata;
-    methodName: string;
-    target: any;
-  }) {
+  }: MethodPatchingParameters) {
     const { originalFn, metadata, aopSymbol } = aopMetadata;
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
