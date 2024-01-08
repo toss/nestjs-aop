@@ -23,6 +23,7 @@
   <ol>
     <li><a href="#installation">Installation</a></li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#Appendices">Appendicies</a></li>
     <li><a href="#references">References</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -109,6 +110,37 @@ export class SomeService {
 }
 ```
 
+<!-- USAGE APPENDICES -->
+## Appendices
+### Appendix-1: A way to define metadata to the decorated target before it's called.
+There's a limitation of `wrap` method; advice logic can only be triggered by calling the decorated method.
+If you want to reference the metadata of the decorated method in `NestInterceptor` as an example, you couldn't get the correct metadata value even with reflection until the method was first called.
+In this case, you can solve it by providing metadata to the target when `AopModule` is initialized with `init` method.
+#### 1. Implement the 'init' method to the concrete implementation of LazyDecorator.
+```typescript
+@Aspect(CACHE_DECORATOR)
+export class CacheDecorator implements LazyDecorator<any, CacheOptions> {
+  constructor(private readonly cache: Cache) {}
+
+  init({ unboundMethod, metadata: options }): InitParams<any, CacheOptions> {
+    Reflect.defineMetadata('__CACHED_METHOD_WATERMARK__', true, unboundMethod);
+  }
+
+  wrap({ method, metadata: options }: WrapParams<any, CacheOptions>) {
+    /* ... */
+  }
+}
+```
+#### 2. When AopModule invokes 'onModuleInit()', the 'init' method applies specified logic to the decorated target.
+In the scenario of the above example, you can get metadata `__CACHED_METHOD_WARTERMARK__` with the value 'true' after `await app.init()`.
+```typescript
+async function bootstrap() {
+  const app = module.createNestApplication(new FastifyAdapter());
+  await app.init();
+  /* ... */
+}
+bootstrap();
+```
 
 <!-- REFERENCES -->
 ## References
