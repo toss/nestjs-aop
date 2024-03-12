@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "esm/index.js",
-  "license": "ISC",
+  "license": "MIT",
   "engines": {
     "node": ">=16",
     "pnpm": "^8"
