@@ -61,7 +61,7 @@ export class AppModule {}
 export const CACHE_DECORATOR = Symbol('CACHE_DECORATOR');
 ```
 
-#### 3. NestJS 프로바이더를 사용하여 LazyDecorator 구현하기
+#### 3. NestJS 프로바이더로 LazyDecorator 구현하기
 `metadata`는 createDecorator의 두 번째 매개변수입니다.
 
 ```typescript
