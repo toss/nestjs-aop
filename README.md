@@ -17,6 +17,8 @@
 
 <br>
 
+English | [한국어](https://github.com/toss/nestjs-aop/blob/v2.x/README-ko_kr.md) 
+
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -28,7 +30,6 @@
     <li><a href="#license">License</a></li>
   </ol>
 </details>
-
 
 
 
