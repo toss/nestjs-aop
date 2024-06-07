@@ -17,14 +17,14 @@
 
 <br>
 
-<!-- TABLE OF CONTENTS -->
+<!-- 목차 -->
 <details>
-  <summary>Table of Contents</summary>
+  <summary>목차</summary>
   <ol>
-    <li><a href="#installation">Installation</a></li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#references">References</a></li>
-    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#설치 방법">설치 방법</a></li>
+    <li><a href="#사용 예시">사용 예시</a></li>
+    <li><a href="#참고자료">참고자료</a></li>
+    <li><a href="#기여하기">기여하기</a></li>
     <li><a href="#license">License</a></li>
   </ol>
 </details>
