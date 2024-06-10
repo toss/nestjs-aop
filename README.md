@@ -17,7 +17,7 @@
 
 <br>
 
-English | [한국어](https://github.com/toss/nestjs-aop/blob/v2.x/README-ko_kr.md) 
+English | [한국어](https://github.com/toss/nestjs-aop/blob/v2.x/readme_kr.md) 
 
 <!-- TABLE OF CONTENTS -->
 <details>
