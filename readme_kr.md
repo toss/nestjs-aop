@@ -25,7 +25,7 @@
     <li><a href="#사용 예시">사용 예시</a></li>
     <li><a href="#참고자료">참고자료</a></li>
     <li><a href="#기여하기">기여하기</a></li>
-    <li><a href="#license">License</a></li>
+    <li><a href="#라이센스">라이센스</a></li>
   </ol>
 </details>
 
@@ -123,8 +123,8 @@ export class SomeService {
 
 
 
-<!-- LICENSE -->
-## License
+<!-- 라이센스 -->
+## 라이센스
 MIT © Viva Republica, Inc. [LICENSE](LICENSE) 파일을 참고하세요.
 
 
