@@ -3,7 +3,6 @@
   "version": "2.1.6",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "module": "esm/index.js",
   "license": "MIT",
   "engines": {
     "node": ">=16",
@@ -11,10 +10,9 @@
   },
   "scripts": {
     "test": "jest --maxWorkers 4",
-    "build": "rm -rf dist esm && tsc -p tsconfig.build.json && tsc -p tsconfig.esm.json"
+    "build": "rm -rf dist && tsc -p tsconfig.build.json"
   },
   "files": [
-    "esm",
     "dist",
     "src"
   ],
