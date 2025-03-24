@@ -25,6 +25,7 @@ English | [한국어](https://github.com/toss/nestjs-aop/blob/v2.x/readme_kr.md)
   <ol>
     <li><a href="#installation">Installation</a></li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#caveats">Caveats</a></li>
     <li><a href="#references">References</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -108,6 +109,21 @@ export class SomeService {
     // ...
   }
 }
+```
+
+
+<!-- CAVEATS -->
+## Caveats
+If you’re testing with NestJS’s TestingModule, don’t forget to call the init method.
+
+```typescript
+import { Test } from '@nestjs/testing';
+
+const module = await Test.createTestingModule({
+  // ...
+}).compile();
+
+await module.init();
 ```
 
 
