@@ -44,7 +44,11 @@ export class AutoAspectExecutor implements OnModuleInit {
   private applyLazyDecorator(lazyDecorator: LazyDecorator, instanceWrapper: InstanceWrapper<any>) {
     const target = instanceWrapper.isDependencyTreeStatic()
       ? instanceWrapper.instance
-      : instanceWrapper.metatype.prototype;
+      : instanceWrapper.metatype?.prototype;
+
+    if (target) {
+      console.debug('[applyLazyDecorator] not found target');
+    }
 
     // Use scanFromPrototype for support nestjs 8
     const propertyKeys = this.metadataScanner.scanFromPrototype(
