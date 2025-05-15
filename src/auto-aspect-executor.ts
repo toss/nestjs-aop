@@ -48,6 +48,7 @@ export class AutoAspectExecutor implements OnModuleInit {
 
     if (target) {
       console.debug('[applyLazyDecorator] not found target');
+      return;
     }
 
     // Use scanFromPrototype for support nestjs 8
