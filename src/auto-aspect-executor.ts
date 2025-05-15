@@ -46,7 +46,7 @@ export class AutoAspectExecutor implements OnModuleInit {
       ? instanceWrapper.instance
       : instanceWrapper.metatype?.prototype;
 
-    if (target) {
+    if (!target) {
       console.debug('[applyLazyDecorator] not found target');
       return;
     }
