@@ -23,6 +23,7 @@
   <ol>
     <li><a href="#설치 방법">설치 방법</a></li>
     <li><a href="#사용 예시">사용 예시</a></li>
+    <li><a href="#주의사항">주의사항</a></li>
     <li><a href="#참고자료">참고자료</a></li>
     <li><a href="#기여하기">기여하기</a></li>
     <li><a href="#라이센스">라이센스</a></li>
@@ -107,6 +108,21 @@ export class SomeService {
     // ...
   }
 }
+```
+
+
+<!-- 주의사항 -->
+## 주의사항
+NestJS의 `TestingModule`을 이용해 테스트할 경우 init 메소드 호출이 필요합니다.
+
+```typescript
+import { Test } from '@nestjs/testing';
+
+const module = await Test.createTestingModule({
+  // ...
+}).compile();
+
+await module.init();
 ```
 
 
