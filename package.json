@@ -58,7 +58,8 @@
     "toss-nestjs"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "volta": {
     "node": "22.15.1",

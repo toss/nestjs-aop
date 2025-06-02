@@ -8,10 +8,9 @@
   <h2>@toss/nestjs-aop &middot; <a href="https://badge.fury.io/js/@toss%2Fnestjs-aop"><img src="https://badge.fury.io/js/@toss%2Fnestjs-aop.svg" alt="npm version" height="18"></a></h2>
 
   <p align="center">
-    A way to gracefully apply AOP to nestjs
+    A way to gracefully apply AOP to NestJS.
     <br>
-    Use nestjs managed instances in any decorators gracefully
-</a></h6>
+    Use NestJS managed instances in any decorators gracefully.
   </p>
 </div>
 
@@ -64,7 +63,7 @@ export const CACHE_DECORATOR = Symbol('CACHE_DECORATOR');
 ```
 
 #### 3. Implement LazyDecorator using nestjs provider
-`metadata` is the second parameter of createDecorator.
+`metadata` is passed as the second argument to `createDecorator` and is made available in the `WrapParams` for the `wrap` method.
 
 ```typescript
 @Aspect(CACHE_DECORATOR)
@@ -93,7 +92,7 @@ export class CacheModule {}
 ```
 
 #### 5. Create decorator that marks metadata of LazyDecorator
-`options` can be obtained from the warp method and used.
+`options` can be obtained from the `wrap` method and used.
 
 ```typescript
 export const Cache = (options: CacheOptions) => createDecorator(CACHE_DECORATOR, options)
@@ -136,7 +135,7 @@ await module.init();
 
 <!-- CONTRIBUTING -->
 ## Contributing
-We welcome contribution from everyone in this project. Read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guide.
+We welcome contributions from everyone to this project. Read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guide.
 
 
 
