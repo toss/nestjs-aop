@@ -15,16 +15,16 @@ export const createDecorator = (
     // 1. Add metadata to the method
     (target: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
       return AddMetadata<symbol | string, AopMetadata>(metadataKey, {
-        originalFn: descriptor.value,
+        originalFn: descriptor.value || descriptor.get || descriptor.set,
         metadata,
         aopSymbol,
       })(target, propertyKey, descriptor);
     },
     // 2. Wrap the method before the lazy decorator is executed
     (_: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
-      const originalFn = descriptor.value;
+      const originalFn = descriptor.value || descriptor.get || descriptor.set;
 
-      descriptor.value = function (this: any, ...args: unknown[]) {
+      const wrapperFn = function (this: any, ...args: unknown[]) {
         const wrappedFn = this[aopSymbol]?.[propertyKey];
         if (wrappedFn) {
           // If there is a wrapper stored in the method, use it
@@ -34,17 +34,28 @@ export const createDecorator = (
         return originalFn.apply(this, args);
       };
 
+      // Assign wrapper to the appropriate descriptor property
+      if (descriptor.value !== undefined) {
+        descriptor.value = wrapperFn;
+      } else if (descriptor.get !== undefined) {
+        descriptor.get = wrapperFn as any;
+      } else if (descriptor.set !== undefined) {
+        descriptor.set = wrapperFn as any;
+      }
+
       /**
        * There are codes that using `function.name`.
        * Therefore the codes below are necessary.
        *
        * ex) @nestjs/swagger
        */
-      Object.defineProperty(descriptor.value, 'name', {
+      Object.defineProperty(wrapperFn, 'name', {
         value: propertyKey.toString(),
         writable: false,
       });
-      Object.setPrototypeOf(descriptor.value, originalFn);
+      if (originalFn) {
+        Object.setPrototypeOf(wrapperFn, originalFn);
+      }
     },
   );
 };
