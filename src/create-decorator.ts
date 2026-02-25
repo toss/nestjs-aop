@@ -14,6 +14,12 @@ export const createDecorator = (
   return applyDecorators(
     // 1. Add metadata to the method
     (target: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
+      if (descriptor.get && descriptor.set) {
+        throw new Error(
+          `createDecorator cannot be applied to '${String(propertyKey)}' because it has both a getter and a setter. ` +
+            `Separate them into different properties, or use a regular method instead.`,
+        );
+      }
       return AddMetadata<symbol | string, AopMetadata>(metadataKey, {
         originalFn: descriptor.value || descriptor.get || descriptor.set,
         metadata,

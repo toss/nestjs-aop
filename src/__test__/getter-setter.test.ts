@@ -66,7 +66,7 @@ describe('Getter and Setter with AOP', () => {
       }
 
       @Observable({
-        onChange: (value, propertyName, instance) => {
+        onChange: (value, propertyName) => {
           changes.push({ value, property: propertyName });
         },
       })
@@ -79,7 +79,7 @@ describe('Getter and Setter with AOP', () => {
       }
 
       @Observable({
-        onChange: (value, propertyName, instance) => {
+        onChange: (value, propertyName) => {
           changes.push({ value, property: propertyName });
         },
       })
@@ -185,6 +185,24 @@ describe('Getter and Setter with AOP', () => {
     counterService.setValue(20);
     expect(changes).toContain(20);
     expect(changes.length).toBe(2);
+  });
+
+  it('should throw error when decorator is applied to property with both getter and setter', () => {
+    expect(() => {
+      class TestService {
+        private _value = '';
+
+        @AutoCache()
+        get value() {
+          return this._value;
+        }
+
+        set value(val: string) {
+          this._value = val;
+        }
+      }
+      new TestService();
+    }).toThrow(/both a getter and a setter/);
   });
 
   it('AutoCache with TTL should expire and recompute', async () => {
