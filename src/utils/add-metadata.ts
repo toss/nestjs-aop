@@ -7,10 +7,11 @@ export const AddMetadata = <K extends string | symbol = string, V = any>(
     __: string | symbol,
     descriptor: PropertyDescriptor,
   ): TypedPropertyDescriptor<any> => {
-    if (!Reflect.hasMetadata(metadataKey, descriptor.value)) {
-      Reflect.defineMetadata(metadataKey, [], descriptor.value);
+    const target = descriptor.value || descriptor.get || descriptor.set;
+    if (!Reflect.hasMetadata(metadataKey, target)) {
+      Reflect.defineMetadata(metadataKey, [], target);
     }
-    const metadataValues: V[] = Reflect.getMetadata(metadataKey, descriptor.value);
+    const metadataValues: V[] = Reflect.getMetadata(metadataKey, target);
     metadataValues.push(metadataValue);
     return descriptor;
   };

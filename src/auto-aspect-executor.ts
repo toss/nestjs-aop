@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { DiscoveryService, MetadataScanner, Reflector } from '@nestjs/core';
+import { DiscoveryService, Reflector } from '@nestjs/core';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 import { ASPECT } from './aspect';
 import { AopMetadata } from './core/types';
@@ -13,7 +13,6 @@ export class AutoAspectExecutor implements OnModuleInit {
   private readonly wrappedMethodCache = new WeakMap();
   constructor(
     private readonly discoveryService: DiscoveryService,
-    private readonly metadataScanner: MetadataScanner,
     private readonly reflector: Reflector,
   ) {}
 
@@ -52,18 +51,23 @@ export class AutoAspectExecutor implements OnModuleInit {
     }
 
     // Use scanFromPrototype for support nestjs 8
-    const propertyKeys = this.metadataScanner.scanFromPrototype(
-      target,
-      instanceWrapper.isDependencyTreeStatic() ? Object.getPrototypeOf(target) : target,
-      (name) => name,
-    );
+    const prototypeToScan = instanceWrapper.isDependencyTreeStatic() ? Object.getPrototypeOf(target) : target;
+
+    // Get all property keys including getters/setters from prototype chain
+    const allPropertyKeys = this.getAllPropertyKeys(prototypeToScan);
 
     const metadataKey = this.reflector.get(ASPECT, lazyDecorator.constructor);
     // instance에 method names 를 순회하면서 lazyDecorator.wrap을 적용함
-    for (const propertyKey of propertyKeys) {
+    for (const propertyKey of allPropertyKeys) {
+      if (propertyKey === 'constructor') {
+        continue;
+      }
+
       // the target method is must be object or function
       // @see: https://github.com/rbuckton/reflect-metadata/blob/9562d6395cc3901eaafaf8a6ed8bc327111853d5/Reflect.ts#L938
-      const targetProperty = target[propertyKey];
+      // Get descriptor to handle getters/setters properly (search in prototype chain)
+      const descriptor = this.getPropertyDescriptor(prototypeToScan, propertyKey);
+      const targetProperty = descriptor?.value || descriptor?.get || descriptor?.set;
       if (!targetProperty || (typeof targetProperty !== "object" && typeof targetProperty !== "function")) {
         continue;
       }
@@ -117,6 +121,34 @@ export class AutoAspectExecutor implements OnModuleInit {
 
     target[aopSymbol] ??= {};
     target[aopSymbol][methodName] = wrappedFn;
+  }
+
+  private getAllPropertyKeys(prototype: any): string[] {
+    const keys = new Set<string>();
+    let current = prototype;
+
+    // Traverse prototype chain until reaching Object.prototype
+    while (current && current !== Object.prototype) {
+      Object.getOwnPropertyNames(current).forEach((key) => keys.add(key));
+      current = Object.getPrototypeOf(current);
+    }
+
+    return Array.from(keys);
+  }
+
+  private getPropertyDescriptor(prototype: any, propertyKey: string): PropertyDescriptor | undefined {
+    let current = prototype;
+
+    // Search in prototype chain
+    while (current && current !== Object.prototype) {
+      const descriptor = Object.getOwnPropertyDescriptor(current, propertyKey);
+      if (descriptor) {
+        return descriptor;
+      }
+      current = Object.getPrototypeOf(current);
+    }
+
+    return undefined;
   }
 
   private lookupLazyDecorators(providers: InstanceWrapper[]): LazyDecorator[] {
