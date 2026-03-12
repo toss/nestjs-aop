@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/toss/nestjs-aop">
-    <img src="https://toss.tech/wp-content/uploads/2022/11/tech-article-nest-js-02.png" alt="Logo" height="200">
+    <img src="https://static.toss.im/tech-article-nest-js-02.png" alt="Logo" height="200">
   </a>
 
   <h2>@toss/nestjs-aop &middot; <a href="https://badge.fury.io/js/@toss%2Fnestjs-aop"><img src="https://badge.fury.io/js/@toss%2Fnestjs-aop.svg" alt="npm version" height="18"></a></h2>
@@ -29,10 +29,8 @@
   </ol>
 </details>
 
-
-
-
 <!-- 설치 방법 -->
+
 ## 설치 방법
 
 ```sh
@@ -41,11 +39,12 @@ pnpm add @toss/nestjs-aop
 yarn add @toss/nestjs-aop
 ```
 
-
 <!-- 사용 예시 -->
+
 ## 사용 예시
 
 #### 1. AopModule Import 하기
+
 ```typescript
 @Module({
   imports: [
@@ -57,11 +56,13 @@ export class AppModule {}
 ```
 
 #### 2. LazyDecorator를 위한 심볼 생성
+
 ```typescript
 export const CACHE_DECORATOR = Symbol('CACHE_DECORATOR');
 ```
 
 #### 3. NestJS 프로바이더로 LazyDecorator 구현하기
+
 `metadata`는 createDecorator의 두 번째 매개변수입니다.
 
 ```typescript
@@ -72,7 +73,7 @@ export class CacheDecorator implements LazyDecorator<any, CacheOptions> {
   wrap({ method, metadata: options }: WrapParams<any, CacheOptions>) {
     return (...args: any) => {
       let cachedValue = this.cache.get(...args);
-      if (!cachedValue) { 
+      if (!cachedValue) {
         cachedValue = method(...args);
         this.cache.set(cachedValue, ...args);
       }
@@ -83,6 +84,7 @@ export class CacheDecorator implements LazyDecorator<any, CacheOptions> {
 ```
 
 #### 4. 모듈의 프로바이더에 LazyDecoratorImpl 추가하기
+
 ```typescript
 @Module({
   providers: [CacheDecorator],
@@ -91,13 +93,15 @@ export class CacheModule {}
 ```
 
 #### 5. LazyDecorator의 metadata를 나타내는 데코레이터 생성
+
 `options`는 wrap 메소드에서 얻을 수 있으며 사용될 수 있습니다.
 
 ```typescript
-export const Cache = (options: CacheOptions) => createDecorator(CACHE_DECORATOR, options)
+export const Cache = (options: CacheOptions) => createDecorator(CACHE_DECORATOR, options);
 ```
 
 #### 6. 사용하기!
+
 ```typescript
 export class SomeService {
   @Cache({
@@ -109,9 +113,10 @@ export class SomeService {
 }
 ```
 
-
 <!-- 주의사항 -->
+
 ## 주의사항
+
 NestJS의 `TestingModule`을 이용해 테스트할 경우 init 메소드 호출이 필요합니다.
 
 ```typescript
@@ -124,24 +129,24 @@ const module = await Test.createTestingModule({
 await module.init();
 ```
 
-
 <!-- 참고자료 -->
+
 ## 참고자료
+
 - https://toss.tech/article/nestjs-custom-decorator
 - https://youtu.be/VH1GTGIMHQw?t=2973
 
-
-
 <!-- 기여하기 -->
+
 ## 기여하기
+
 이 프로젝트에는 모든 분들의 기여를 환영합니다. 자세한 기여 가이드는 [CONTRIBUTING.md](CONTRIBUTING.md)를 참고하세요.
 
-
-
 <!-- 라이센스 -->
-## 라이센스
-MIT © Viva Republica, Inc. [LICENSE](LICENSE) 파일을 참고하세요.
 
+## 라이센스
+
+MIT © Viva Republica, Inc. [LICENSE](LICENSE) 파일을 참고하세요.
 
 <!-- BOTTOM LOGO -->
 <a title="Toss" href="https://toss.im">
