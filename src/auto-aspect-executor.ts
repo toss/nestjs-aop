@@ -6,7 +6,8 @@ import { AopMetadata } from './core/types';
 import { LazyDecorator } from './lazy-decorator';
 
 /**
- * Aspect 가 선언되어 있고 LazyDecorator 가 구현되어 있는 provider 가 있는 경우 ioc 에 등록된 모든 provider 를 순회하면서 LazyDecorator 를 적용함.
+ * If there are providers that have @Aspect declared and implement LazyDecorator,
+ * iterate through all providers registered in the IoC container and apply LazyDecorator to each.
  */
 @Injectable()
 export class AutoAspectExecutor implements OnModuleInit {

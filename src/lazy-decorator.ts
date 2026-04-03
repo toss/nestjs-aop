@@ -7,7 +7,8 @@ export type WrapParams<T extends Function = Function, M = unknown> = {
 };
 
 /**
- * Aspect 선언시 구현이 필요합니다.
+ * Must be implemented when declaring an Aspect.
+ * @see Aspect
  */
 export interface LazyDecorator<T extends Function = Function, M = unknown> {
   wrap(params: WrapParams<T, M>): T;
