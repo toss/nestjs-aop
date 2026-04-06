@@ -4,7 +4,7 @@ import { AddMetadata } from './utils';
 
 /**
  * @param metadataKey equal to 1st argument of Aspect Decorator
- * @param metadata The value corresponding to the metadata of WrapParams. It can be obtained from LazyDecorator's warp method and used.
+ * @param metadata The value corresponding to the metadata of WrapParams. It can be obtained from LazyDecorator's wrap method and used.
  */
 export const createDecorator = (
   metadataKey: symbol | string,
