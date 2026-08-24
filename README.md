@@ -5,7 +5,7 @@
     <img src="https://static.toss.im/tech-article-nest-js-02.png" alt="Logo" height="200">
   </a>
 
-  <h2>@toss/nestjs-aop &middot; <a href="https://badge.fury.io/js/@toss%2Fnestjs-aop"><img src="https://badge.fury.io/js/@toss%2Fnestjs-aop.svg" alt="npm version" height="18"></a></h2>
+  <h2>@toss/nestjs-aop &middot; <a href="https://badge.fury.io/js/@toss%2Fnestjs-aop"><img src="https://badge.fury.io/js/@toss%2Fnestjs-aop.svg" alt="npm version" height="18"></a> <a href="https://github.com/toss/nestjs-aop/actions/workflows/ci.yml"><img src="https://github.com/toss/nestjs-aop/actions/workflows/ci.yml/badge.svg" alt="CI" height="18"></a> <a href="./LICENSE"><img src="https://img.shields.io/npm/l/@toss/nestjs-aop" alt="license" height="18"></a></h2>
 
   <p align="center">
     A way to gracefully apply AOP to NestJS.
@@ -24,6 +24,7 @@ English | [한국어](https://github.com/toss/nestjs-aop/blob/v2.x/readme_kr.md)
   <ol>
     <li><a href="#installation">Installation</a></li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#getter-setter-and-inheritance-support">Getter, Setter and Inheritance Support</a></li>
     <li><a href="#caveats">Caveats</a></li>
     <li><a href="#references">References</a></li>
     <li><a href="#contributing">Contributing</a></li>
@@ -114,6 +115,26 @@ export class SomeService {
   }
 }
 ```
+
+<!-- GETTER, SETTER AND INHERITANCE SUPPORT -->
+
+## Getter, Setter and Inheritance Support
+
+`createDecorator` can also be applied to `get`/`set` accessors, and decorated methods or accessors are inherited correctly by subclasses.
+
+```typescript
+class UserService {
+  private _name = 'John';
+
+  @Cache({ ttl: 1000 })
+  get name() {
+    return this._name.toUpperCase();
+  }
+}
+```
+
+- A decorator can be applied to a `get` accessor, a `set` accessor, or a regular method — but **not to a property that has both a getter and a setter**. Split them into separate properties, or use a regular method instead.
+- A decorated method or accessor keeps working when called through a subclass instance.
 
 <!-- CAVEATS -->
 

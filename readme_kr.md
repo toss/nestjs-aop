@@ -5,7 +5,7 @@
     <img src="https://static.toss.im/tech-article-nest-js-02.png" alt="Logo" height="200">
   </a>
 
-  <h2>@toss/nestjs-aop &middot; <a href="https://badge.fury.io/js/@toss%2Fnestjs-aop"><img src="https://badge.fury.io/js/@toss%2Fnestjs-aop.svg" alt="npm version" height="18"></a></h2>
+  <h2>@toss/nestjs-aop &middot; <a href="https://badge.fury.io/js/@toss%2Fnestjs-aop"><img src="https://badge.fury.io/js/@toss%2Fnestjs-aop.svg" alt="npm version" height="18"></a> <a href="https://github.com/toss/nestjs-aop/actions/workflows/ci.yml"><img src="https://github.com/toss/nestjs-aop/actions/workflows/ci.yml/badge.svg" alt="CI" height="18"></a> <a href="./LICENSE"><img src="https://img.shields.io/npm/l/@toss/nestjs-aop" alt="license" height="18"></a></h2>
 
   <p align="center">
     NestJS에 우아하게 AOP를 적용하는 방법
@@ -16,12 +16,15 @@
 
 <br>
 
+[English](https://github.com/toss/nestjs-aop/blob/v2.x/README.md) | 한국어
+
 <!-- 목차 -->
 <details>
   <summary>목차</summary>
   <ol>
     <li><a href="#설치 방법">설치 방법</a></li>
     <li><a href="#사용 예시">사용 예시</a></li>
+    <li><a href="#getter-setter-상속-지원">Getter, Setter, 상속 지원</a></li>
     <li><a href="#주의사항">주의사항</a></li>
     <li><a href="#참고자료">참고자료</a></li>
     <li><a href="#기여하기">기여하기</a></li>
@@ -112,6 +115,26 @@ export class SomeService {
   }
 }
 ```
+
+<!-- GETTER, SETTER, 상속 지원 -->
+
+## Getter, Setter, 상속 지원
+
+`createDecorator`는 `get`/`set` 접근자에도 적용할 수 있고, 데코레이팅된 메소드나 접근자는 자식 클래스에도 올바르게 상속됩니다.
+
+```typescript
+class UserService {
+  private _name = 'John';
+
+  @Cache({ ttl: 1000 })
+  get name() {
+    return this._name.toUpperCase();
+  }
+}
+```
+
+- 데코레이터는 `get` 접근자, `set` 접근자, 일반 메소드에 적용할 수 있지만, **같은 프로퍼티에 getter와 setter가 동시에 있으면 적용할 수 없습니다.** 서로 다른 프로퍼티로 분리하거나 일반 메소드를 사용하세요.
+- 데코레이팅된 메소드나 접근자는 자식 클래스 인스턴스를 통해 호출해도 그대로 동작합니다.
 
 <!-- 주의사항 -->
 
