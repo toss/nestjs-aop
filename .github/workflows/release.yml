@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+# Queue releases instead of racing two pushes' publishes against each other.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  # Runs immediately on every merge to main so PR authors get fast build/test
+  # feedback, independent of whether/when a release actually goes out.
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup toolchain (node/pnpm via mise)
+        uses: jdx/mise-action@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test
+
+  # changesets/action batches releases without any manual approval step:
+  # every push either (a) creates/updates a "Version Packages" PR that keeps
+  # accumulating every merged changeset, or (b) if that PR was just merged
+  # (no changesets left), publishes to npm right away. Docs/chore PRs that
+  # never add a changeset never touch the Version Packages PR at all.
+  release:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to push the "Version Packages" commit/tags and create GitHub Releases
+      pull-requests: write # to create/update the "Version Packages" PR
+      id-token: write # to enable use of OIDC for npm trusted publishing and provenance
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup toolchain (node/pnpm via mise)
+        uses: jdx/mise-action@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Version or Publish
+        uses: changesets/action@v1
+        with:
+          publish: npx changeset publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
