@@ -1,2 +1,3 @@
-onlyBuiltDependencies:
-  - '@nestjs/core'
+allowBuilds:
+  '@nestjs/core': true
+  unrs-resolver: true

@@ -12,19 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22'
-          cache: 'pnpm'
+      - name: Setup toolchain (node/pnpm via mise)
+        uses: jdx/mise-action@v4
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
 
       - name: Build
         run: |
