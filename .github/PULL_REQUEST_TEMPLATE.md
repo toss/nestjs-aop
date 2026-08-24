@@ -6,7 +6,7 @@
 
 ## PR Checklist
 
-- [ ] I read and included theses actions below
+- [ ] I read and included these actions below
 
-1. I have read the [Contributing Guide](https://github.com/toss/nestjs-aop/blob/main/CONTRIBUTING.md)
+1. I have read the [Contributing Guide](https://github.com/toss/nestjs-aop/blob/v2.x/CONTRIBUTING.md)
 2. I have written documents and tests, if needed.

@@ -4,7 +4,7 @@ We welcome contribution from everyone in the community. <br/>
 All communications in this repo will be by English.
 
 > Every contributor to Slash libraries should adhere to our Code of Conduct. 
-> <br/>Please read the [full text](./CODE_OF_CONDUCT.md) to understand what actions will and will not be tolerated.
+> <br/>Please read the [full text](.github/CODE_OF_CONDUCT.md) to understand what actions will and will not be tolerated.
 
 
 ## 1. Issues
@@ -26,7 +26,7 @@ You can raise your own PR. The title of your PR should match the following forma
 <type>: <description>
 ```
 
-> We do not care about the number, or style of commits in your history, because we squash merge every PR into main. <br/> 
+> We do not care about the number, or style of commits in your history, because we squash merge every PR into the base branch (`v2.x`). <br/> 
 > Feel free to commit in whatever style you feel comfortable with.
 
 ### 2.1 Type
