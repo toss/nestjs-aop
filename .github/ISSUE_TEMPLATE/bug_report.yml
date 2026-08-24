@@ -1,0 +1,55 @@
+name: Bug report
+description: Report a bug in @toss/nestjs-aop
+title: "[BUG]: "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening an issue, please [search the existing ones](https://github.com/toss/nestjs-aop/issues) — if you find the same report, upvote it instead of opening a new one.
+  - type: input
+    id: package-version
+    attributes:
+      label: "@toss/nestjs-aop version"
+      placeholder: 2.1.8
+    validations:
+      required: true
+  - type: input
+    id: nestjs-version
+    attributes:
+      label: NestJS version
+      placeholder: "11.2.1"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: |
+        The smallest piece of code that reproduces the issue. A link to StackBlitz or a public repository works too.
+      render: typescript
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Possible solution
+      description: If you have suggestions on a fix for the bug.
+    validations:
+      required: false
+  - type: checkboxes
+    id: validations
+    attributes:
+      label: Validations
+      options:
+        - label: I searched the existing issues.
+          required: true
+        - label: I read the [Contributing Guide](https://github.com/toss/nestjs-aop/blob/v2.x/CONTRIBUTING.md).
+          required: true
