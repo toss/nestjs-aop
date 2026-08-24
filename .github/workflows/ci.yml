@@ -10,7 +10,7 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Setup toolchain (node/pnpm via mise)
         uses: jdx/mise-action@v4
