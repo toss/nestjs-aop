@@ -44,9 +44,19 @@ if you haven't changed shipped code :
 other :
 - chore - anything else
 
-> Every merge to `main` is analyzed for release based on this type: `feat` bumps the minor version, `fix`/`refactor` bump the patch version, and a `BREAKING CHANGE:` footer in the PR description bumps the major version. `docs`, `test`, and `chore` PRs don't publish a new version. The actual npm publish waits for a maintainer to approve it in the Actions tab, so several PRs can land on `main` and go out together as one release. Make sure your PR title has the right type — it becomes the release note.
+### 2.2 Changeset
 
-### 2.2 Description
+If your PR changes shipped code (`feat`/`fix`/`refactor`), run:
+
+```
+pnpm changeset
+```
+
+and pick the version bump (`patch`/`minor`/`major`) plus a short summary — that summary becomes the changelog entry for your change. `docs`/`test`/`chore` PRs usually don't need one.
+
+> Merged changesets pile up into an auto-updated "Version Packages" PR. Merging **that** PR is what actually publishes to npm — so several of your PRs can land on `main` and go out together as one release, and PRs without a changeset never trigger a release at all.
+
+### 2.3 Description
 
 A clear and concise description of what the pr is about.
 
