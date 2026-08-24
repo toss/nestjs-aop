@@ -26,7 +26,7 @@ You can raise your own PR. The title of your PR should match the following forma
 <type>: <description>
 ```
 
-> We do not care about the number, or style of commits in your history, because we squash merge every PR into the base branch (`v2.x`). <br/> 
+> We do not care about the number, or style of commits in your history, because we squash merge every PR into the base branch (`main`). <br/> 
 > Feel free to commit in whatever style you feel comfortable with.
 
 ### 2.1 Type
