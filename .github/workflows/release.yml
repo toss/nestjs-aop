@@ -9,8 +9,38 @@ permissions:
   contents: read
 
 jobs:
-  release:
+  # Runs immediately on every merge to main so PR authors get fast build/test
+  # feedback, independent of whether/when the release below gets approved.
+  verify:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup toolchain (node/pnpm via mise)
+        uses: jdx/mise-action@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test
+
+  # Gated behind the "release" environment's required reviewers so small/docs
+  # merges can accumulate on main without publishing a version for each one.
+  # The `concurrency` group means a newer push cancels an older pending
+  # approval instead of stacking up, so whichever run finally gets approved
+  # covers every commit merged since the last real release (semantic-release
+  # always analyzes commits since the last tag, not just this push's diff).
+  release:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: release
+    concurrency:
+      group: release
+      cancel-in-progress: true
     permissions:
       contents: write # to be able to publish a GitHub release and push the release commit
       issues: write # to be able to comment on released issues
@@ -27,9 +57,6 @@ jobs:
 
       - name: Build
         run: pnpm build
-
-      - name: Test
-        run: pnpm test
 
       - name: Release
         run: npx semantic-release
