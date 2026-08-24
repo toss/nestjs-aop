@@ -5,24 +5,36 @@
     <img src="https://static.toss.im/tech-article-nest-js-02.png" alt="Logo" height="200">
   </a>
 
-  <h2>@toss/nestjs-aop &middot; <a href="https://badge.fury.io/js/@toss%2Fnestjs-aop"><img src="https://badge.fury.io/js/@toss%2Fnestjs-aop.svg" alt="npm version" height="18"></a> <a href="https://github.com/toss/nestjs-aop/actions/workflows/ci.yml"><img src="https://github.com/toss/nestjs-aop/actions/workflows/ci.yml/badge.svg" alt="CI" height="18"></a> <a href="./LICENSE"><img src="https://img.shields.io/npm/l/@toss/nestjs-aop" alt="license" height="18"></a></h2>
+  <h2>@toss/nestjs-aop</h2>
 
   <p align="center">
     NestJS에 우아하게 AOP를 적용하는 방법
     <br>
     NestJS 관리 인스턴스를 모든 데코레이터에서 우아하게 사용하세요.
   </p>
+
+  <p align="center">
+    <a href="https://www.npmjs.com/package/@toss/nestjs-aop"><img src="https://badge.fury.io/js/@toss%2Fnestjs-aop.svg" alt="npm version"></a>
+    <a href="https://github.com/toss/nestjs-aop/actions/workflows/ci.yml"><img src="https://github.com/toss/nestjs-aop/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+    <a href="https://www.npmjs.com/package/@toss/nestjs-aop"><img src="https://img.shields.io/npm/types/@toss/nestjs-aop" alt="types"></a>
+    <a href="https://bundlephobia.com/package/@toss/nestjs-aop"><img src="https://img.shields.io/bundlephobia/minzip/@toss/nestjs-aop" alt="bundle size"></a>
+    <a href="https://www.npmjs.com/package/@toss/nestjs-aop"><img src="https://img.shields.io/npm/dm/@toss/nestjs-aop.svg" alt="downloads"></a>
+    <a href="./LICENSE"><img src="https://img.shields.io/npm/l/@toss/nestjs-aop" alt="license"></a>
+    <a href="https://github.com/toss/nestjs-aop/stargazers"><img src="https://img.shields.io/github/stars/toss/nestjs-aop?style=social" alt="stars"></a>
+  </p>
 </div>
 
 <br>
 
-[English](https://github.com/toss/nestjs-aop/blob/v2.x/README.md) | 한국어
+[English](https://github.com/toss/nestjs-aop/blob/main/README.md) | 한국어
 
 <!-- 목차 -->
 <details>
   <summary>목차</summary>
   <ol>
+    <li><a href="#특징">특징</a></li>
     <li><a href="#설치 방법">설치 방법</a></li>
+    <li><a href="#빠르게-시작하기">빠르게 시작하기</a></li>
     <li><a href="#사용 예시">사용 예시</a></li>
     <li><a href="#getter-setter-상속-지원">Getter, Setter, 상속 지원</a></li>
     <li><a href="#주의사항">주의사항</a></li>
@@ -31,6 +43,16 @@
     <li><a href="#라이센스">라이센스</a></li>
   </ol>
 </details>
+
+<!-- 특징 -->
+
+## 특징
+
+- 🎯 **데코레이터 기반 AOP** — 메소드, getter, setter 어디든 캐싱·로깅·재시도 같은 공통 로직을 재사용 가능한 형태로 감쌀 수 있어요
+- 🧩 **IoC 컨테이너와 자연스럽게 동작** — aspect도 평범한 NestJS provider라 필요한 건 `@Inject`로 그대로 받아 써요
+- 🪶 **런타임 매직 없음** — 네이티브 데코레이터 + `reflect-metadata` 기반, 별도 코드 변환 단계가 없어요
+- ✅ **NestJS 8 → 11 지원** — 메이저 버전 트레드밀 없이 패키지 하나로 대응해요
+- 🧬 **상속까지 고려** — 데코레이팅된 메소드는 자식 클래스에서 호출해도 그대로 동작해요
 
 <!-- 설치 방법 -->
 
@@ -41,6 +63,37 @@ npm install @toss/nestjs-aop
 pnpm add @toss/nestjs-aop
 yarn add @toss/nestjs-aop
 ```
+
+<!-- 빠르게 시작하기 -->
+
+## 빠르게 시작하기
+
+```typescript
+export const CACHE = Symbol('CACHE');
+export const Cache = (options?: CacheOptions) => createDecorator(CACHE, options);
+
+@Aspect(CACHE)
+export class CacheDecorator implements LazyDecorator<any, CacheOptions> {
+  constructor(private readonly cache: Cache) {}
+
+  wrap({ method, metadata: options }: WrapParams<any, CacheOptions>) {
+    return (...args: any[]) => {
+      const cached = this.cache.get(...args);
+      return cached ?? this.cache.set(method(...args), ...args);
+    };
+  }
+}
+
+@Injectable()
+export class UserService {
+  @Cache({ ttl: 1000 })
+  findAll() {
+    // ...
+  }
+}
+```
+
+각 조각이 어떻게 맞물리는지 단계별로 보고 싶다면 아래 [사용 예시](#사용-예시)를 참고하세요.
 
 <!-- 사용 예시 -->
 
