@@ -52,7 +52,9 @@ export class AutoAspectExecutor implements OnModuleInit {
     }
 
     // Use scanFromPrototype for support nestjs 8
-    const prototypeToScan = instanceWrapper.isDependencyTreeStatic() ? Object.getPrototypeOf(target) : target;
+    const prototypeToScan = instanceWrapper.isDependencyTreeStatic()
+      ? Object.getPrototypeOf(target)
+      : target;
 
     // Get all property keys including getters/setters from prototype chain
     const allPropertyKeys = this.getAllPropertyKeys(prototypeToScan);
@@ -69,7 +71,10 @@ export class AutoAspectExecutor implements OnModuleInit {
       // Get descriptor to handle getters/setters properly (search in prototype chain)
       const descriptor = this.getPropertyDescriptor(prototypeToScan, propertyKey);
       const targetProperty = descriptor?.value || descriptor?.get || descriptor?.set;
-      if (!targetProperty || (typeof targetProperty !== "object" && typeof targetProperty !== "function")) {
+      if (
+        !targetProperty ||
+        (typeof targetProperty !== 'object' && typeof targetProperty !== 'function')
+      ) {
         continue;
       }
 
@@ -137,7 +142,10 @@ export class AutoAspectExecutor implements OnModuleInit {
     return Array.from(keys);
   }
 
-  private getPropertyDescriptor(prototype: any, propertyKey: string): PropertyDescriptor | undefined {
+  private getPropertyDescriptor(
+    prototype: any,
+    propertyKey: string,
+  ): PropertyDescriptor | undefined {
     let current = prototype;
 
     // Search in prototype chain

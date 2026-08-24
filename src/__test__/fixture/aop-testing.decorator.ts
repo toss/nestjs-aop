@@ -10,11 +10,7 @@ type AopTestingOptions = {
     wrapParams: WrapParams<any, AopTestingOptions>;
     dependencies: any[][];
   }) => unknown;
-  wrapCallback?: (
-    params: WrapParams<any, AopTestingOptions>,
-    self: AopTestingDecorator,
-    // eslint-disable-next-line @typescript-eslint/ban-types
-  ) => void;
+  wrapCallback?: (params: WrapParams<any, AopTestingOptions>, self: AopTestingDecorator) => void;
 };
 
 export const AopTesting = (options: AopTestingOptions) => createDecorator(AOP_TESTING, options);

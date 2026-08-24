@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 export type WrapParams<T extends Function = Function, M = unknown> = {
   instance: any;
   methodName: string;
