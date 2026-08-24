@@ -44,6 +44,8 @@ if you haven't changed shipped code :
 other :
 - chore - anything else
 
+> Every merge to `main` triggers an automated release based on this type: `feat` bumps the minor version, `fix`/`refactor` bump the patch version, and a `BREAKING CHANGE:` footer in the PR description bumps the major version. `docs`, `test`, and `chore` PRs don't publish a new version. Make sure your PR title has the right type — it becomes the release note.
+
 ### 2.2 Description
 
 A clear and concise description of what the pr is about.
