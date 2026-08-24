@@ -4,6 +4,7 @@
     [
       "@semantic-release/commit-analyzer",
       {
+        "preset": "conventionalcommits",
         "releaseRules": [
           { "type": "refactor", "release": "patch" },
           { "type": "docs", "release": false },
@@ -12,7 +13,22 @@
         ]
       }
     ],
-    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits",
+        "presetConfig": {
+          "types": [
+            { "type": "feat", "section": "Features", "effect": "bump" },
+            { "type": "fix", "section": "Bug Fixes", "effect": "bump" },
+            { "type": "refactor", "section": "Code Refactoring", "effect": "bump" },
+            { "type": "docs", "section": "Documentation", "effect": "hidden" },
+            { "type": "test", "section": "Tests", "effect": "hidden" },
+            { "type": "chore", "section": "Chores", "effect": "hidden" }
+          ]
+        }
+      }
+    ],
     "@semantic-release/changelog",
     "@semantic-release/npm",
     [
