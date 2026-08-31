@@ -60,7 +60,7 @@ jobs:
         run: pnpm build
 
       - name: Version or Publish
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           publish: npx changeset publish
         env:
