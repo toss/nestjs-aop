@@ -50,7 +50,7 @@
 - 🎯 **데코레이터 기반 AOP** — 메소드, getter, setter 어디든 캐싱·로깅·재시도 같은 공통 로직을 재사용 가능한 형태로 감쌀 수 있어요
 - 🧩 **IoC 컨테이너와 자연스럽게 동작** — aspect도 평범한 NestJS provider라 필요한 건 `@Inject`로 그대로 받아 써요
 - 🪶 **런타임 매직 없음** — 네이티브 데코레이터 + `reflect-metadata` 기반, 별도 코드 변환 단계가 없어요
-- ✅ **NestJS 8 → 11 지원** — 메이저 버전 트레드밀 없이 패키지 하나로 대응해요
+- ✅ **NestJS 8 → 12 지원** — 메이저 버전 트레드밀 없이 패키지 하나로 대응해요
 - 🧬 **상속까지 고려** — 데코레이팅된 메소드는 자식 클래스에서 호출해도 그대로 동작해요
 
 <!-- 설치 방법 -->
@@ -62,6 +62,11 @@ npm install @toss/nestjs-aop
 pnpm add @toss/nestjs-aop
 yarn add @toss/nestjs-aop
 ```
+
+> **NestJS 12를 쓰고 있다면?** NestJS 12는 ESM 전용으로 배포되는데, 이 패키지는 CommonJS로 배포돼요.
+> 그래서 로딩이 Node의 `require(esm)` 지원에 의존하고, NestJS 12 사용자는
+> **Node.js >= 20.19 또는 >= 22.12**가 필요해요. 그보다 낮은 20.x에서는 `ERR_REQUIRE_ESM`으로 실패해요.
+> NestJS 8 - 11 사용자는 영향이 없어요.
 
 <!-- 빠르게 시작하기 -->
 
