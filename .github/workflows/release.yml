@@ -62,6 +62,4 @@ jobs:
       - name: Version or Publish
         uses: changesets/action@v2
         with:
-          publish: npx changeset publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          publish-script: npx changeset publish
