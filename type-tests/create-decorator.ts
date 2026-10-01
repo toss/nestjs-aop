@@ -1,8 +1,8 @@
-import { createDecorator, createTypedDecorator, LazyDecorator, WrapParams } from '../src';
+import { createDecorator, LazyDecorator, WrapParams } from '../src';
 
 const KEY = Symbol('typed');
 type TextMethod = (value: string) => string;
-const Text = () => createTypedDecorator<TextMethod>(KEY);
+const Text = () => createDecorator<TextMethod>(KEY);
 
 export class TextAspect implements LazyDecorator<TextMethod> {
   wrap({ method }: WrapParams<TextMethod>): TextMethod {
@@ -60,17 +60,17 @@ const wrongResult: number = result;
 void wrongResult;
 
 // @ts-expect-error the type argument must be callable
-createTypedDecorator<string>(KEY);
+createDecorator<string>(KEY);
 
 type AsyncMethod = (value: string) => Promise<string>;
 export class AsyncMethods {
-  @createTypedDecorator<AsyncMethod>(KEY)
+  @createDecorator<AsyncMethod>(KEY)
   async valid(value: string): Promise<string> {
     return value;
   }
 
   // @ts-expect-error synchronous return does not satisfy a Promise return
-  @createTypedDecorator<AsyncMethod>(KEY)
+  @createDecorator<AsyncMethod>(KEY)
   invalid(value: string): string {
     return value;
   }
@@ -78,19 +78,19 @@ export class AsyncMethods {
 
 type OptionalRestMethod = (prefix: string, count?: number, ...suffixes: string[]) => string;
 export class OptionalRestMethods {
-  @createTypedDecorator<OptionalRestMethod>(KEY)
+  @createDecorator<OptionalRestMethod>(KEY)
   valid(prefix: string, count?: number, ...suffixes: string[]): string {
     return prefix + count + suffixes.join('');
   }
 
   // @ts-expect-error aspect may omit the optional argument
-  @createTypedDecorator<OptionalRestMethod>(KEY)
+  @createDecorator<OptionalRestMethod>(KEY)
   required(prefix: string, count: number): string {
     return prefix + count;
   }
 
   // @ts-expect-error rest argument types must agree
-  @createTypedDecorator<OptionalRestMethod>(KEY)
+  @createDecorator<OptionalRestMethod>(KEY)
   badRest(prefix: string, count?: number, ...suffixes: number[]): string {
     return prefix + count + suffixes.join('');
   }
@@ -100,14 +100,14 @@ type Receiver = { prefix: string };
 type ReceiverMethod = (this: Receiver, value: string) => string;
 export class WithReceiver {
   prefix = 'prefix';
-  @createTypedDecorator<ReceiverMethod>(KEY)
+  @createDecorator<ReceiverMethod>(KEY)
   valid(this: Receiver, value: string): string {
     return this.prefix + value;
   }
 }
 export class MissingReceiver {
   // @ts-expect-error decorator target must satisfy the explicit receiver type
-  @createTypedDecorator<ReceiverMethod>(KEY)
+  @createDecorator<ReceiverMethod>(KEY)
   invalid(value: string): string {
     return value;
   }
@@ -115,7 +115,7 @@ export class MissingReceiver {
 export class WrongReceiver {
   prefix = 'prefix';
   // @ts-expect-error incompatible explicit this parameter
-  @createTypedDecorator<ReceiverMethod>(KEY)
+  @createDecorator<ReceiverMethod>(KEY)
   invalid(this: { prefix: number }, value: string): string {
     return this.prefix + value;
   }
@@ -128,13 +128,13 @@ type Overloaded = {
 export class OverloadedMethods {
   valid(value: string): string;
   valid(value: number): number;
-  @createTypedDecorator<Overloaded>(KEY)
+  @createDecorator<Overloaded>(KEY)
   valid(value: string | number): string | number {
     return value;
   }
 
   // @ts-expect-error all overloads in the shared function type are required
-  @createTypedDecorator<Overloaded>(KEY)
+  @createDecorator<Overloaded>(KEY)
   invalid(value: string): string {
     return value;
   }
@@ -145,13 +145,13 @@ void [overloadedString, overloadedNumber];
 
 type Identity = <T>(value: T) => T;
 export class GenericMethods {
-  @createTypedDecorator<Identity>(KEY)
+  @createDecorator<Identity>(KEY)
   valid<T>(value: T): T {
     return value;
   }
 
   // @ts-expect-error a concrete method cannot implement generic identity
-  @createTypedDecorator<Identity>(KEY)
+  @createDecorator<Identity>(KEY)
   invalid(value: string): string {
     return value;
   }
@@ -173,7 +173,7 @@ export class VarianceChecks {
   }
 
   // Contextual inference alone does not connect a decorator to an aspect.
-  @createTypedDecorator(KEY)
+  @createDecorator(KEY)
   missingType(value: string): string {
     return value;
   }
@@ -203,7 +203,7 @@ export class StructuralCompatibilityLimits {
     return String(value);
   }
 
-  @createTypedDecorator<{ method(value: string): string }['method']>(KEY)
+  @createDecorator<{ method(value: string): string }['method']>(KEY)
   methodIndexedBivariance(value: 'only'): string {
     return value;
   }
@@ -211,10 +211,66 @@ export class StructuralCompatibilityLimits {
 
 type NoReceiverMethod = (this: void, value: string) => string;
 export class NoReceiverMethods {
-  @createTypedDecorator<NoReceiverMethod>(KEY)
+  @createDecorator<NoReceiverMethod>(KEY)
   valid(this: void, value: string): string {
     return value;
   }
 }
 const noReceiverResult: string = new NoReceiverMethods().valid('text');
 void noReceiverResult;
+
+// Keep the exact pre-existing non-generic call surface, including arbitrary metadata.
+type LegacyFactory = (key: symbol | string, metadata?: unknown) => MethodDecorator;
+const legacyFactory: LegacyFactory = createDecorator;
+const functionMetadata = (value: number) => String(value);
+const unionMetadata: { label: string } | ((value: number) => string) =
+  Math.random() > 0.5 ? { label: 'text' } : functionMetadata;
+const legacyWithFunction = createDecorator(KEY, functionMetadata);
+const legacyWithUnion = createDecorator(KEY, unionMetadata);
+const legacyWithNull = createDecorator('legacy', null);
+const legacyWithoutMetadata = createDecorator(KEY);
+type Equal<A, B> =
+  (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;
+const functionResultUnchanged: Equal<typeof legacyWithFunction, MethodDecorator> = true;
+const unionResultUnchanged: Equal<typeof legacyWithUnion, MethodDecorator> = true;
+const omittedResultUnchanged: Equal<typeof legacyWithoutMetadata, MethodDecorator> = true;
+void [
+  legacyFactory,
+  legacyWithNull,
+  functionResultUnchanged,
+  unionResultUnchanged,
+  omittedResultUnchanged,
+];
+
+export class LegacyAccessors {
+  @createDecorator(KEY, functionMetadata)
+  get text(): string {
+    return 'text';
+  }
+
+  @createDecorator(KEY, unionMetadata)
+  set value(_value: number) {}
+
+  // A legacy descriptor cannot distinguish a callable getter from a method.
+  // Type arguments are erased, so this remains a documented typing limitation.
+  @createDecorator<TextMethod>(KEY)
+  get callable(): TextMethod {
+    return (value) => value;
+  }
+}
+
+const extractedReturnUnchanged: Equal<ReturnType<typeof createDecorator>, MethodDecorator> = true;
+const extractedParametersUnchanged: Equal<
+  Parameters<typeof createDecorator>,
+  Parameters<LegacyFactory>
+> = true;
+const legacyImplementation: typeof createDecorator = legacyFactory;
+const ReturnTypeFactory = (): ReturnType<typeof createDecorator> => createDecorator(KEY);
+export class ExtractedLegacyReturn {
+  @ReturnTypeFactory()
+  get text(): string {
+    return 'text';
+  }
+}
+void [extractedReturnUnchanged, extractedParametersUnchanged, legacyImplementation];
+void [legacyWithFunction, legacyWithUnion, legacyWithoutMetadata];

@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Injectable } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { AopModule, Aspect, createTypedDecorator, LazyDecorator, WrapParams } from '../index';
+import { AopModule, Aspect, createDecorator, LazyDecorator, WrapParams } from '../index';
 
 const TEXT = Symbol('typed-text');
 const ASYNC_TEXT = Symbol('typed-async-text');
@@ -27,18 +27,18 @@ class AsyncTextAspect implements LazyDecorator<AsyncTextMethod> {
 class TextService {
   private readonly prefix = 'hello ';
 
-  @createTypedDecorator<TextMethod>(TEXT, { suffix: '!' })
+  @createDecorator<TextMethod>(TEXT, { suffix: '!' })
   text(value: string): string {
     return this.prefix + value;
   }
 
-  @createTypedDecorator<AsyncTextMethod>(ASYNC_TEXT)
+  @createDecorator<AsyncTextMethod>(ASYNC_TEXT)
   async asyncText(value: string): Promise<string> {
     return this.prefix + value;
   }
 }
 
-describe('createTypedDecorator', () => {
+describe('createDecorator', () => {
   it('uses the existing aspect pipeline, forwards metadata, and preserves instance binding', async () => {
     const module = await Test.createTestingModule({
       imports: [AopModule],
@@ -59,15 +59,13 @@ describe('createTypedDecorator', () => {
     expect(new TextService().text('world')).toBe('hello world');
   });
 
-  it('rejects callable accessors that cannot be distinguished from methods by TypeScript', () => {
-    expect(() => {
-      class CallableAccessor {
-        @createTypedDecorator<TextMethod>(TEXT)
-        get method(): TextMethod {
-          return (value) => value;
-        }
+  it('keeps untyped callable accessor behavior unchanged', () => {
+    class CallableAccessor {
+      @createDecorator(TEXT)
+      get method(): TextMethod {
+        return (value) => value;
       }
-      return CallableAccessor;
-    }).toThrow('createTypedDecorator can only be applied to methods');
+    }
+    expect(new CallableAccessor().method('text')).toBe('text');
   });
 });
