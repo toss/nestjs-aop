@@ -35,6 +35,7 @@ English | [한국어](https://github.com/toss/nestjs-aop/blob/main/readme_kr.md)
     <li><a href="#installation">Installation</a></li>
     <li><a href="#quick-start">Quick Start</a></li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#typed-method-decorators">Typed method decorators</a></li>
     <li><a href="#getter-setter-and-inheritance-support">Getter, Setter and Inheritance Support</a></li>
     <li><a href="#caveats">Caveats</a></li>
     <li><a href="#references">References</a></li>
@@ -172,6 +173,48 @@ export class SomeService {
   }
 }
 ```
+
+## Typed method decorators
+
+Use `createTypedDecorator<T>` to check a decorated method against the same function type used by `LazyDecorator<T>`. This is opt-in: existing `createDecorator` calls remain unrestricted.
+
+```typescript
+type TextMethod = (value: string) => string;
+const TEXT = Symbol('TEXT');
+const Uppercase = () => createTypedDecorator<TextMethod>(TEXT);
+
+@Aspect(TEXT)
+export class UppercaseAspect implements LazyDecorator<TextMethod> {
+  wrap({ method }: WrapParams<TextMethod>): TextMethod {
+    return (value) => method(value).toUpperCase();
+  }
+}
+
+@Injectable()
+export class TextService {
+  @Uppercase()
+  text(value: string): string {
+    return value;
+  }
+
+  // Compile error: number is incompatible with the shared string argument.
+  // @Uppercase()
+  number(value: number): string {
+    return String(value);
+  }
+}
+```
+
+Register the aspect as a provider and import `AopModule` as usual. The new helper delegates to the existing wrapping pipeline and accepts the same optional metadata argument. `TypedMethodDecorator<T>` is exported for explicitly annotating decorator factories.
+
+### Type checking and limits
+
+- Enable `strict` and `experimentalDecorators`. These are TypeScript **legacy decorators**, not the newer standard decorator API.
+- Supply the shared function type explicitly to check against the aspect. Without it, TypeScript may infer a type from the decorated method alone. It is not inferred from the metadata key, and a key does not verify the type of the registered aspect. Use the same type alias for the decorator, `LazyDecorator`, and `WrapParams`.
+- The decorated method keeps its own public signature. For asynchronous methods, use a function type returning `Promise<Result>`. For overloads or generic methods, share the full overloaded or generic callable type; a wrapper must preserve that contract.
+- An explicit `this` parameter in the shared type also checks the decorator target. Include the receiver contract when it matters; an omitted `this` does not check receiver requirements. The existing runtime binding behavior is unchanged.
+- These are TypeScript structural compatibility checks, not exact type equality or runtime validation. Prefer a function-syntax alias such as `(value: string) => string`. Method-indexed types can retain TypeScript's bivariant parameter behavior, wider method parameters may be accepted (for example, a `string | number` method with a `string` contract), and `any` or type assertions can bypass checking. Ensure the shared type covers **all inputs the method publicly accepts**, so the aspect can handle every caller.
+- The typed helper supports instance methods, not getters/setters or class fields. TypeScript cannot distinguish a function-valued accessor from a method in a legacy descriptor, so the helper rejects accessors at runtime. Use `createDecorator` for existing accessor support.
 
 <!-- GETTER, SETTER AND INHERITANCE SUPPORT -->
 

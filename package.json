@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "changeset": "changeset",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "test:types": "tsc -p tsconfig.type-tests.json"
   },
   "files": [
     "dist",
