@@ -63,12 +63,8 @@ pnpm add @toss/nestjs-aop
 yarn add @toss/nestjs-aop
 ```
 
-> **v3 migration:** This package ships **ESM only** and requires **Node.js >= 22.12.0**.
-> NestJS 10, 11 and 12 are supported; NestJS 8 and 9 users should stay on v2.
-> CommonJS applications can load the synchronous ESM build on supported Node.js versions,
-> but older CommonJS Jest configurations need migration. Use Jest's ESM mode with
-> `--experimental-vm-modules`; Node.js 22 does not support Jest's synchronous ESM loader.
-> See the [v3 migration guide](https://github.com/toss/nestjs-aop/blob/f467f9c967fa77fb80a9fdf9f65916b0b7fbae22/docs/migrations/v3.md) for tested versions, TypeScript and Jest setup.
+> **Requirements:** Node.js >= 22.12.0 · NestJS 10, 11 or 12 · ESM only.
+> Upgrading from v2? See the [migration guide](https://github.com/toss/nestjs-aop/blob/f467f9c967fa77fb80a9fdf9f65916b0b7fbae22/docs/migrations/v3.md).
 
 <!-- QUICK START -->
 

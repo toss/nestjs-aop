@@ -63,12 +63,8 @@ pnpm add @toss/nestjs-aop
 yarn add @toss/nestjs-aop
 ```
 
-> **v3 마이그레이션:** 이제 **ESM 전용**으로 배포하며 **Node.js >= 22.12.0**이 필요해요.
-> NestJS 10, 11, 12를 지원해요. NestJS 8, 9 사용자는 v2를 유지해주세요.
-> 지원하는 Node.js에서는 CommonJS 앱도 동기적인 ESM 빌드를 불러올 수 있지만,
-> 기존 CommonJS Jest 설정은 이전이 필요할 수 있어요. `--experimental-vm-modules`와
-> Jest ESM 모드를 사용해주세요. Node.js 22에서는 Jest의 동기 ESM 로더를 사용할 수 없어요.
-> 검증한 버전과 TypeScript/Jest 설정은 [v3 마이그레이션 가이드](https://github.com/toss/nestjs-aop/blob/f467f9c967fa77fb80a9fdf9f65916b0b7fbae22/docs/migrations/v3.md)를 참고해주세요.
+> **사용 조건:** Node.js >= 22.12.0 · NestJS 10, 11, 12 · ESM 전용.
+> v2에서 업그레이드한다면 [마이그레이션 가이드](https://github.com/toss/nestjs-aop/blob/f467f9c967fa77fb80a9fdf9f65916b0b7fbae22/docs/migrations/v3.md)를 참고해주세요.
 
 <!-- 빠르게 시작하기 -->
 
