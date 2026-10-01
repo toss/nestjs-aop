@@ -3,8 +3,8 @@ import 'reflect-metadata';
 import { Injectable, Module } from '@nestjs/common';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { AopModule } from '../aop.module';
-import { AutoCache, AutoCacheDecorator } from './fixture/auto-cache.decorator';
+import { AopModule } from '../aop.module.js';
+import { AutoCache, AutoCacheDecorator } from './fixture/auto-cache.decorator.js';
 
 describe('Inheritance with AOP', () => {
   it('should work with inherited decorated method', async () => {

@@ -3,9 +3,9 @@ import 'reflect-metadata';
 import { Injectable, Module } from '@nestjs/common';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { AopModule } from '../aop.module';
-import { AutoCache, AutoCacheDecorator } from './fixture/auto-cache.decorator';
-import { Observable, ObservableDecorator } from './fixture/observable.decorator';
+import { AopModule } from '../aop.module.js';
+import { AutoCache, AutoCacheDecorator } from './fixture/auto-cache.decorator.js';
+import { Observable, ObservableDecorator } from './fixture/observable.decorator.js';
 
 describe('Getter and Setter with AOP', () => {
   it('AutoCache decorator should work on getter', async () => {

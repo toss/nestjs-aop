@@ -1,5 +1,9 @@
 {
   "extends": "./tsconfig.json",
   "include": ["src"],
-  "exclude": ["node_modules", "**/__test__"]
+  "exclude": ["node_modules", "**/__test__"],
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
+  }
 }

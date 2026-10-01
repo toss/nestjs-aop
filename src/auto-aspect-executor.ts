@@ -1,9 +1,9 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, Reflector } from '@nestjs/core';
-import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
-import { ASPECT } from './aspect';
-import { AopMetadata } from './core/types';
-import { LazyDecorator } from './lazy-decorator';
+import type { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
+import { ASPECT } from './aspect.js';
+import type { AopMetadata } from './core/types.js';
+import type { LazyDecorator } from './lazy-decorator.js';
 
 /**
  * If there are providers that have @Aspect declared and implement LazyDecorator,

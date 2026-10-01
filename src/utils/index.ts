@@ -1,1 +1,1 @@
-export * from './add-metadata';
+export * from './add-metadata.js';

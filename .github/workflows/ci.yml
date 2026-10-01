@@ -32,12 +32,13 @@ jobs:
   # Every major version listed in `peerDependencies` gets built and tested here,
   # so the support range in package.json stays an actually verified claim.
   compat:
-    name: NestJS v${{ matrix.nest }}
+    name: NestJS ${{ matrix.nest }} / Node ${{ matrix.node }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        nest: [8, 9, 10, 11, 12]
+        nest: [10.4.22, 11.2.6, 12.1.0]
+        node: [22.12.0, 24.19.0, 26.10.0]
     steps:
       - uses: actions/checkout@v7
 
@@ -50,13 +51,21 @@ jobs:
       - name: Pin @nestjs/* to v${{ matrix.nest }}
         run: >-
           pnpm add -D
-          "@nestjs/common@^${{ matrix.nest }}"
-          "@nestjs/core@^${{ matrix.nest }}"
-          "@nestjs/platform-fastify@^${{ matrix.nest }}"
-          "@nestjs/testing@^${{ matrix.nest }}"
+          "@nestjs/common@${{ matrix.nest }}"
+          "@nestjs/core@${{ matrix.nest }}"
+          "@nestjs/platform-fastify@${{ matrix.nest }}"
+          "@nestjs/testing@${{ matrix.nest }}"
+
+      - name: Install runtime under test
+        run: mise install node@${{ matrix.node }}
 
       - name: Build
-        run: pnpm build
+        run: mise exec node@${{ matrix.node }} -- pnpm build
 
       - name: Test
-        run: pnpm test
+        run: mise exec node@${{ matrix.node }} -- pnpm test
+
+      - name: Pack and test independent consumers
+        run: |
+          pnpm pack --out /tmp/nestjs-aop.tgz
+          mise exec node@${{ matrix.node }} -- node scripts/verify-packed.mjs /tmp/nestjs-aop.tgz ${{ matrix.nest }}
