@@ -5,7 +5,7 @@
   "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "test": "jest --maxWorkers 4",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers 4",
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -17,8 +17,8 @@
     "src"
   ],
   "peerDependencies": {
-    "@nestjs/common": "^8 || ^9 || ^10 || ^11",
-    "@nestjs/core": "^8 || ^9 || ^10 || ^11",
+    "@nestjs/common": "^8 || ^9 || ^10 || ^11 || ^12",
+    "@nestjs/core": "^8 || ^9 || ^10 || ^11 || ^12",
     "reflect-metadata": "^0.1.13 || ^0.2.0",
     "rxjs": "^7.5.6"
   },
@@ -28,10 +28,10 @@
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^3.0.3",
     "@eslint/js": "^9.39.5",
-    "@nestjs/common": "^11.2.1",
-    "@nestjs/core": "^11.2.1",
-    "@nestjs/platform-fastify": "^11.2.1",
-    "@nestjs/testing": "^11.2.1",
+    "@nestjs/common": "^12.1.0",
+    "@nestjs/core": "^12.1.0",
+    "@nestjs/platform-fastify": "^12.1.0",
+    "@nestjs/testing": "^12.1.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.17.30",
     "@types/supertest": "^2.0.15",

@@ -50,7 +50,7 @@ English | [한국어](https://github.com/toss/nestjs-aop/blob/main/readme_kr.md)
 - 🎯 **Decorator-based AOP** — wrap any method, getter, or setter with reusable cross-cutting logic (caching, logging, retries, ...)
 - 🧩 **Plays nice with the IoC container** — your aspect is a regular NestJS provider, so `@Inject` anything you need
 - 🪶 **Zero runtime magic** — built on native decorators + `reflect-metadata`, no code transformation step
-- ✅ **NestJS 8 → 11** — one package, no major-version treadmill
+- ✅ **NestJS 8 → 12** — one package, no major-version treadmill
 - 🧬 **Inheritance-aware** — decorated methods keep working when called through a subclass
 
 <!-- INSTALLATION -->
@@ -62,6 +62,11 @@ npm install @toss/nestjs-aop
 pnpm add @toss/nestjs-aop
 yarn add @toss/nestjs-aop
 ```
+
+> **Using NestJS 12?** NestJS 12 ships as ESM only, while this package is published as CommonJS.
+> Loading it therefore relies on Node's `require(esm)` support, so NestJS 12 users need
+> **Node.js `^20.19.0 || >=22.12.0`**. On Node 20.x below 20.19.0 or Node 22.x below 22.12.0, the import fails with `ERR_REQUIRE_ESM`.
+> NestJS 8 - 11 users are unaffected.
 
 <!-- QUICK START -->
 
