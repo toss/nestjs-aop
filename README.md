@@ -65,7 +65,7 @@ yarn add @toss/nestjs-aop
 
 > **Using NestJS 12?** NestJS 12 ships as ESM only, while this package is published as CommonJS.
 > Loading it therefore relies on Node's `require(esm)` support, so NestJS 12 users need
-> **Node.js >= 20.19 or >= 22.12**. On older Node 20.x releases the import fails with `ERR_REQUIRE_ESM`.
+> **Node.js `^20.19.0 || >=22.12.0`**. On Node 20.x below 20.19.0 or Node 22.x below 22.12.0, the import fails with `ERR_REQUIRE_ESM`.
 > NestJS 8 - 11 users are unaffected.
 
 <!-- QUICK START -->

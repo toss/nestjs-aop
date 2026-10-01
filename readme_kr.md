@@ -65,7 +65,7 @@ yarn add @toss/nestjs-aop
 
 > **NestJS 12를 쓰고 있다면?** NestJS 12는 ESM 전용으로 배포되는데, 이 패키지는 CommonJS로 배포돼요.
 > 그래서 로딩이 Node의 `require(esm)` 지원에 의존하고, NestJS 12 사용자는
-> **Node.js >= 20.19 또는 >= 22.12**가 필요해요. 그보다 낮은 20.x에서는 `ERR_REQUIRE_ESM`으로 실패해요.
+> **Node.js `^20.19.0 || >=22.12.0`**가 필요해요. Node 20.x의 20.19.0 미만이나 Node 22.x의 22.12.0 미만에서는 `ERR_REQUIRE_ESM`으로 실패해요.
 > NestJS 8 - 11 사용자는 영향이 없어요.
 
 <!-- 빠르게 시작하기 -->
