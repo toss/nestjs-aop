@@ -208,3 +208,13 @@ export class StructuralCompatibilityLimits {
     return value;
   }
 }
+
+type NoReceiverMethod = (this: void, value: string) => string;
+export class NoReceiverMethods {
+  @createTypedDecorator<NoReceiverMethod>(KEY)
+  valid(this: void, value: string): string {
+    return value;
+  }
+}
+const noReceiverResult: string = new NoReceiverMethods().valid('text');
+void noReceiverResult;

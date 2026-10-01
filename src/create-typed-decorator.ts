@@ -2,7 +2,7 @@ import { createDecorator } from './create-decorator';
 
 /** A legacy method decorator constrained to a shared aspect function type. */
 export type TypedMethodDecorator<T extends (...args: any[]) => any> = (
-  target: object & ThisParameterType<T>,
+  target: ThisParameterType<T> extends void ? object : object & ThisParameterType<T>,
   propertyKey: string | symbol,
   descriptor: TypedPropertyDescriptor<T>,
 ) => TypedPropertyDescriptor<T> | void;
