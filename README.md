@@ -63,8 +63,10 @@ pnpm add @toss/nestjs-aop
 yarn add @toss/nestjs-aop
 ```
 
-> **Requirements:** Node.js >= 22.12.0 · NestJS 10, 11 or 12 · ESM only.
-> Upgrading from v2? See the [migration guide](https://github.com/toss/nestjs-aop/blob/f467f9c967fa77fb80a9fdf9f65916b0b7fbae22/docs/migrations/v3.md).
+> **Requirements:** Node.js >= 22.12.0 · NestJS 10, 11 or 12 · ESM build.
+> CommonJS apps can load it through `require(esm)`. CJS + TypeScript NodeNext needs TS >= 5.8; `node16` does not support this interop.
+> Jest needs ESM mode + `--experimental-vm-modules`, or the tested Jest 30.4.2 CJS setup on Node >= 24.9 with the same flag.
+> Upgrading from v2? See the [migration guide](https://github.com/toss/nestjs-aop/blob/main/docs/migrations/v3.md).
 
 <!-- QUICK START -->
 

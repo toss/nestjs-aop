@@ -29,8 +29,8 @@ jobs:
         run: |
           pnpm test
 
-  # Every major version listed in `peerDependencies` gets built and tested here,
-  # so the support range in package.json stays an actually verified claim.
+  # Reproducible Node/Nest pairs exercise repository tests and packed consumers.
+  # compat-range below separately covers Nest minimums and current major ranges.
   compat:
     name: NestJS ${{ matrix.nest }} / Node ${{ matrix.node }}
     runs-on: ubuntu-latest
@@ -67,5 +67,26 @@ jobs:
 
       - name: Pack and test independent consumers
         run: |
+          mise exec node@${{ matrix.node }} -- pnpm pack --out /tmp/nestjs-aop.tgz
+          mise exec node@${{ matrix.node }} -- npm run test:packed -- /tmp/nestjs-aop.tgz "${{ matrix.nest }}"
+
+  compat-range:
+    name: NestJS range ${{ matrix.nest }} / Node 24.19.0
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        nest: ['10.0.0', '11.0.0', '12.0.1', '^10', '^11', '^12']
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup toolchain (node/pnpm via mise)
+        uses: jdx/mise-action@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Pack and test minimum/current Nest consumers
+        run: |
           pnpm pack --out /tmp/nestjs-aop.tgz
-          mise exec node@${{ matrix.node }} -- node scripts/verify-packed.mjs /tmp/nestjs-aop.tgz ${{ matrix.nest }}
+          npm run test:packed -- /tmp/nestjs-aop.tgz "${{ matrix.nest }}"

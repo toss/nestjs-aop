@@ -51,7 +51,7 @@ export class AutoAspectExecutor implements OnModuleInit {
       return;
     }
 
-    // Use scanFromPrototype for support nestjs 8
+    // Static providers use their instance prototype; scoped providers use the metatype.
     const prototypeToScan = instanceWrapper.isDependencyTreeStatic()
       ? Object.getPrototypeOf(target)
       : target;

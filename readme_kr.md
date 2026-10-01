@@ -63,8 +63,10 @@ pnpm add @toss/nestjs-aop
 yarn add @toss/nestjs-aop
 ```
 
-> **사용 조건:** Node.js >= 22.12.0 · NestJS 10, 11, 12 · ESM 전용.
-> v2에서 업그레이드한다면 [마이그레이션 가이드](https://github.com/toss/nestjs-aop/blob/f467f9c967fa77fb80a9fdf9f65916b0b7fbae22/docs/migrations/v3.md)를 참고해주세요.
+> **사용 조건:** Node.js >= 22.12.0 · NestJS 10, 11, 12 · ESM 빌드.
+> CommonJS 앱에서도 `require(esm)`으로 사용할 수 있어요. CJS + TypeScript NodeNext에는 TS >= 5.8이 필요하며, `node16`은 이 연동을 지원하지 않아요.
+> Jest는 ESM 모드와 `--experimental-vm-modules`가 필요해요. 검증된 Jest 30.4.2 CJS 설정은 Node >= 24.9에서 같은 플래그로 사용할 수 있어요.
+> v2에서 업그레이드한다면 [마이그레이션 가이드](https://github.com/toss/nestjs-aop/blob/main/docs/migrations/v3.md)를 참고해주세요.
 
 <!-- 빠르게 시작하기 -->
 
