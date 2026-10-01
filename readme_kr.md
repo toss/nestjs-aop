@@ -68,7 +68,7 @@ yarn add @toss/nestjs-aop
 > 지원하는 Node.js에서는 CommonJS 앱도 동기적인 ESM 빌드를 불러올 수 있지만,
 > 기존 CommonJS Jest 설정은 이전이 필요할 수 있어요. `--experimental-vm-modules`와
 > Jest ESM 모드를 사용해주세요. Node.js 22에서는 Jest의 동기 ESM 로더를 사용할 수 없어요.
-> 검증한 버전과 TypeScript/Jest 설정은 [v3 마이그레이션 가이드](https://github.com/toss/nestjs-aop/blob/feat/v3-esm-only/docs/migrations/v3.md)를 참고해주세요.
+> 검증한 버전과 TypeScript/Jest 설정은 [v3 마이그레이션 가이드](https://github.com/toss/nestjs-aop/blob/f467f9c967fa77fb80a9fdf9f65916b0b7fbae22/docs/migrations/v3.md)를 참고해주세요.
 
 <!-- 빠르게 시작하기 -->
 
