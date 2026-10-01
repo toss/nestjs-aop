@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, Reflector } from '@nestjs/core';
-import type { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
+import type { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper.js';
 import { ASPECT } from './aspect.js';
 import type { AopMetadata } from './core/types.js';
 import type { LazyDecorator } from './lazy-decorator.js';
