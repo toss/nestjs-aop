@@ -68,7 +68,7 @@ yarn add @toss/nestjs-aop
 > CommonJS applications can load the synchronous ESM build on supported Node.js versions,
 > but older CommonJS Jest configurations need migration. Use Jest's ESM mode with
 > `--experimental-vm-modules`; Node.js 22 does not support Jest's synchronous ESM loader.
-> See the [v3 migration guide](./MIGRATION_V3.md) for tested versions, TypeScript and Jest setup.
+> See the [v3 migration guide](https://github.com/toss/nestjs-aop/blob/feat/v3-esm-only/docs/migrations/v3.md) for tested versions, TypeScript and Jest setup.
 
 <!-- QUICK START -->
 

@@ -1,4 +1,12 @@
-import { mkdtempSync, readFileSync, copyFileSync, writeFileSync, rmSync } from 'node:fs';
+import {
+  mkdtempSync,
+  readFileSync,
+  copyFileSync,
+  writeFileSync,
+  rmSync,
+  existsSync,
+  readdirSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -91,6 +99,28 @@ try {
   );
   if (pkg.type !== 'module') {
     throw new Error('Expected the packed ESM-only package');
+  }
+  const packageDir = join(dir, 'node_modules/@toss/nestjs-aop');
+  if (JSON.stringify(pkg.files) !== JSON.stringify(['dist'])) {
+    throw new Error('Expected a dist-only publish allowlist');
+  }
+  if (
+    existsSync(join(packageDir, 'src')) ||
+    existsSync(join(packageDir, 'docs')) ||
+    existsSync(join(packageDir, 'MIGRATION_V3.md'))
+  ) {
+    throw new Error('Repository-only files leaked into the npm tarball');
+  }
+  for (const file of readdirSync(join(packageDir, 'dist'))) {
+    if (file.endsWith('.d.ts.map')) {
+      throw new Error('Declaration maps point to unshipped source');
+    }
+    if (file.endsWith('.js.map')) {
+      const map = JSON.parse(readFileSync(join(packageDir, 'dist', file), 'utf8'));
+      if (!map.sourcesContent?.length || map.sources.some((source) => source.startsWith('/'))) {
+        throw new Error('Source maps must embed source and use relative paths');
+      }
+    }
   }
   console.log(`PASS packed consumer: Node ${process.versions.node}, Nest ${nest}, Jest 30.4.2`);
 } finally {

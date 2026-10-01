@@ -1,7 +1,6 @@
 {
   "name": "@toss/nestjs-aop",
   "version": "2.2.0",
-  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
@@ -10,12 +9,11 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "changeset": "changeset",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "prepack": "npm run build"
   },
   "files": [
-    "dist",
-    "src",
-    "MIGRATION_V3.md"
+    "dist"
   ],
   "peerDependencies": {
     "@nestjs/common": "^10 || ^11 || ^12",
@@ -76,10 +74,7 @@
     "node": ">=22.12.0"
   },
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./package.json": "./package.json"
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"
   }
 }
