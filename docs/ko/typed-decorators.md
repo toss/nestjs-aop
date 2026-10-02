@@ -1,8 +1,8 @@
 # 타입이 있는 데코레이터
 
-[처음으로](../readme_kr.md) · [사용 가이드](usage_kr.md) · [English](typed-decorators.md) | 한국어
+[처음으로](../../readme_kr.md) · [사용 가이드](usage.md) · [English](../en/typed-decorators.md) | 한국어
 
-레거시 메서드 데코레이터에 선택적으로 적용하는 컴파일 시점 타입 검사입니다. Aspect 등록과 런타임 동작은 [사용 가이드](usage_kr.md)부터 참고하세요.
+레거시 메서드 데코레이터에 선택적으로 적용하는 컴파일 시점 타입 검사입니다. Aspect 등록과 런타임 동작은 [사용 가이드](usage.md)부터 참고하세요.
 
 ## 공유 메서드 계약
 

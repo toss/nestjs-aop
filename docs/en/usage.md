@@ -1,10 +1,10 @@
 # Usage guide
 
-[Home](../README.md) · English | [한국어](usage_kr.md) · [Typed decorators](typed-decorators.md)
+[Home](../../README.md) · English | [한국어](../ko/usage.md) · [Typed decorators](typed-decorators.md)
 
 An aspect is a NestJS provider that wraps a method. A decorator connects the method to the aspect with a shared key; its optional metadata carries per-method options.
 
-The [quick start](../README.md#quick-start) shows a complete application. This guide adds metadata and an injected service, then covers accessors, inheritance, and testing. Keep `experimentalDecorators` and `emitDecoratorMetadata` enabled for Nest's legacy decorators.
+The [quick start](../../README.md#quick-start) shows a complete application. This guide adds metadata and an injected service, then covers accessors, inheritance, and testing. Keep `experimentalDecorators` and `emitDecoratorMetadata` enabled for Nest's legacy decorators.
 
 ## 1. Define a key and decorator
 
@@ -87,7 +87,7 @@ Import `AopModule` and register the aspect, its dependencies, and your service. 
 class AppModule {}
 ```
 
-After Nest initializes the application, `app.get(GreetingService).greet('Nest')` logs `[greeting] greet` and returns `Hello, Nest!`. See the [quick start](../README.md#quick-start) for the application-context bootstrap.
+After Nest initializes the application, `app.get(GreetingService).greet('Nest')` logs `[greeting] greet` and returns `Hello, Nest!`. See the [quick start](../../README.md#quick-start) for the application-context bootstrap.
 
 ## Getters, setters, and inheritance
 
@@ -139,4 +139,4 @@ This example assumes your project's existing Jest setup. Initialization is requi
 ## Next steps
 
 - [Typed decorators](typed-decorators.md): shared contracts, generic inference, and checking limits
-- [Migrating from v1 to v2](migration-guide-v2.md): replace `SetMetadata` with `createDecorator`
+- [Migrating from v1 to v2](../migration-guide-v2.md): replace `SetMetadata` with `createDecorator`

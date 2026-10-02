@@ -103,8 +103,8 @@ Hello, Nest!
 
 ## 문서
 
-- **[사용 가이드](https://github.com/toss/nestjs-aop/blob/main/docs/usage_kr.md)** · 데코레이터 작성, metadata 전달, 서비스 주입, 접근자·상속·테스트
-- **[타입이 있는 데코레이터](https://github.com/toss/nestjs-aop/blob/main/docs/typed-decorators_kr.md)** · 공유 계약, 원본 메서드 타입 추론, TypeScript의 검사 범위
+- **[사용 가이드](https://github.com/toss/nestjs-aop/blob/main/docs/ko/usage.md)** · 데코레이터 작성, metadata 전달, 서비스 주입, 접근자·상속·테스트
+- **[타입이 있는 데코레이터](https://github.com/toss/nestjs-aop/blob/main/docs/ko/typed-decorators.md)** · 공유 계약, 원본 메서드 타입 추론, TypeScript의 검사 범위
 - **[v1에서 v2로 마이그레이션](https://github.com/toss/nestjs-aop/blob/main/docs/migration-guide-v2.md)** (영문) · `SetMetadata`를 `createDecorator`로 교체하기
 
 메서드 타입 검사는 선택 사항이에요. 기존 `createDecorator(key, metadata?)` 호출도 그대로 사용할 수 있어요.

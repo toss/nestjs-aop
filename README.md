@@ -103,8 +103,8 @@ The original result is returned unchanged. In tests, call `await module.init()` 
 
 ## Documentation
 
-- **[Usage guide](https://github.com/toss/nestjs-aop/blob/main/docs/usage.md)** · Build decorators, pass metadata, inject services, and work with accessors, inheritance, and tests
-- **[Typed decorators](https://github.com/toss/nestjs-aop/blob/main/docs/typed-decorators.md)** · Shared contracts, original-method inference, and TypeScript's limits
+- **[Usage guide](https://github.com/toss/nestjs-aop/blob/main/docs/en/usage.md)** · Build decorators, pass metadata, inject services, and work with accessors, inheritance, and tests
+- **[Typed decorators](https://github.com/toss/nestjs-aop/blob/main/docs/en/typed-decorators.md)** · Shared contracts, original-method inference, and TypeScript's limits
 - **[Migrating from v1 to v2](https://github.com/toss/nestjs-aop/blob/main/docs/migration-guide-v2.md)** · Replace `SetMetadata` with `createDecorator`
 
 Typed method checks are optional. Existing `createDecorator(key, metadata?)` calls keep working.

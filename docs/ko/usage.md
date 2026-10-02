@@ -1,10 +1,10 @@
 # 사용 가이드
 
-[처음으로](../readme_kr.md) · [English](usage.md) | 한국어 · [타입이 있는 데코레이터](typed-decorators_kr.md)
+[처음으로](../../readme_kr.md) · [English](../en/usage.md) | 한국어 · [타입이 있는 데코레이터](typed-decorators.md)
 
 Aspect는 메서드를 감싸는 NestJS 프로바이더입니다. 데코레이터는 공유 키로 메서드와 aspect를 연결하고, 선택적인 metadata로 메서드별 옵션을 전달합니다.
 
-[빠르게 시작하기](../readme_kr.md#빠르게-시작하기)에는 완전한 앱 예제가 있습니다. 이 가이드에서는 metadata와 서비스 주입을 추가하고, 접근자·상속·테스트를 살펴봅니다. Nest의 레거시 데코레이터를 위해 `experimentalDecorators`와 `emitDecoratorMetadata`를 활성화하세요.
+[빠르게 시작하기](../../readme_kr.md#빠르게-시작하기)에는 완전한 앱 예제가 있습니다. 이 가이드에서는 metadata와 서비스 주입을 추가하고, 접근자·상속·테스트를 살펴봅니다. Nest의 레거시 데코레이터를 위해 `experimentalDecorators`와 `emitDecoratorMetadata`를 활성화하세요.
 
 ## 1. 키와 데코레이터 정의하기
 
@@ -73,7 +73,7 @@ class GreetingService {
 }
 ```
 
-`LazyDecorator<AnyMethod, LogOptions>`는 aspect 구현의 타입을 표현합니다. 데코레이터가 적용된 메서드의 시그니처까지 검사하려면 [`createDecorator<T>`](typed-decorators_kr.md)를 사용하세요. metadata 키만으로 공유 타입이 강제되지는 않습니다.
+`LazyDecorator<AnyMethod, LogOptions>`는 aspect 구현의 타입을 표현합니다. 데코레이터가 적용된 메서드의 시그니처까지 검사하려면 [`createDecorator<T>`](typed-decorators.md)를 사용하세요. metadata 키만으로 공유 타입이 강제되지는 않습니다.
 
 ## 4. 모듈과 프로바이더 등록하기
 
@@ -87,7 +87,7 @@ class GreetingService {
 class AppModule {}
 ```
 
-Nest가 앱을 초기화한 뒤 `app.get(GreetingService).greet('Nest')`를 호출하면 `[greeting] greet`를 출력하고 `Hello, Nest!`를 반환합니다. 앱 컨텍스트를 실행하는 코드는 [빠르게 시작하기](../readme_kr.md#빠르게-시작하기)를 참고하세요.
+Nest가 앱을 초기화한 뒤 `app.get(GreetingService).greet('Nest')`를 호출하면 `[greeting] greet`를 출력하고 `Hello, Nest!`를 반환합니다. 앱 컨텍스트를 실행하는 코드는 [빠르게 시작하기](../../readme_kr.md#빠르게-시작하기)를 참고하세요.
 
 ## Getter, Setter, 상속
 
@@ -113,7 +113,7 @@ class AdminProfile extends UserProfile {}
 - 일반 메서드, getter, setter를 데코레이터로 감쌀 수 있습니다
 - **getter와 setter가 모두 있는 프로퍼티는 지원하지 않으며** 데코레이션 시 에러가 발생합니다. 별도 프로퍼티로 나누거나 일반 메서드를 사용하세요
 - 데코레이터가 적용된 메서드와 접근자는 자식 클래스 인스턴스에서도 동작합니다
-- 타입 overload는 접근자나 클래스 필드가 아닌 인스턴스 메서드를 표현합니다. [타입 검사 범위와 제한](typed-decorators_kr.md#타입-검사-범위와-제한)을 참고하세요
+- 타입 overload는 접근자나 클래스 필드가 아닌 인스턴스 메서드를 표현합니다. [타입 검사 범위와 제한](typed-decorators.md#타입-검사-범위와-제한)을 참고하세요
 
 ## 테스트
 
@@ -138,5 +138,5 @@ it('runs a decorated method', async () => {
 
 ## 다음 단계
 
-- [타입이 있는 데코레이터](typed-decorators_kr.md): 공유 계약, 제네릭 추론, 검사 범위
-- [v1에서 v2로 마이그레이션](migration-guide-v2.md) (영문): `SetMetadata`를 `createDecorator`로 교체하기
+- [타입이 있는 데코레이터](typed-decorators.md): 공유 계약, 제네릭 추론, 검사 범위
+- [v1에서 v2로 마이그레이션](../migration-guide-v2.md) (영문): `SetMetadata`를 `createDecorator`로 교체하기

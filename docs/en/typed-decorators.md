@@ -1,6 +1,6 @@
 # Typed decorators
 
-[Home](../README.md) · [Usage](usage.md) · English | [한국어](typed-decorators_kr.md)
+[Home](../../README.md) · [Usage](usage.md) · English | [한국어](../ko/typed-decorators.md)
 
 Optional compile-time checks for legacy method decorators. Start with the [usage guide](usage.md) for aspect registration and runtime behavior.
 
