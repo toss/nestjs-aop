@@ -18,5 +18,5 @@
     "declarationMap": true
   },
   "include": ["src", "type-tests"],
-  "exclude": ["node_modules", "dist", "esm"]
+  "exclude": ["node_modules", "dist", "esm", "**/__test__"]
 }
