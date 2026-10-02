@@ -8,6 +8,8 @@ Optional compile-time checks for legacy method decorators. Start with the [usage
 
 Use `createDecorator<T>` to check a decorated method against the same function type used by `LazyDecorator<T>`. This is opt-in: existing `createDecorator` calls remain unrestricted.
 
+The explicit shared-contract form, such as `createDecorator<TextMethod>`, works with TypeScript 4.7 and later.
+
 ```typescript
 import { Injectable } from '@nestjs/common';
 import { Aspect, createDecorator } from '@toss/nestjs-aop';
@@ -43,6 +45,8 @@ export class TextService {
 Register the aspect as a provider and import `AopModule` as usual. The typed overload uses the same wrapping pipeline and optional metadata argument as existing calls. `TypedMethodDecorator<T>` is exported for explicitly annotating decorator factories.
 
 ## Infer the original method's signature
+
+Inferring `F` from the decorated method requires **TypeScript 5.0 or later**. On TypeScript 4.x, use an explicit shared contract as above, or pass the method type explicitly to a generic factory, such as `Retry<Method>(...)`.
 
 For an aspect that works with many method signatures, keep `F` generic all the way from the options to the returned `TypedMethodDecorator<F>`. When the factory is called directly in `@Retry(...)`, TypeScript can infer `F` from the decorated method and use it to type the options callback:
 

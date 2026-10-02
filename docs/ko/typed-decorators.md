@@ -8,6 +8,8 @@
 
 `createDecorator<T>`를 사용하면 데코레이터를 적용한 메서드와 `LazyDecorator<T>`에서 같은 함수 타입을 공유하고 호환성을 검사할 수 있습니다. 선택적으로 사용하는 API이며 기존 `createDecorator` 호출은 그대로 유지됩니다.
 
+`createDecorator<TextMethod>`처럼 공유 계약을 명시하는 형태는 TypeScript 4.7 이상에서 사용할 수 있습니다.
+
 ```typescript
 import { Injectable } from '@nestjs/common';
 import { Aspect, createDecorator } from '@toss/nestjs-aop';
@@ -43,6 +45,8 @@ export class TextService {
 기존과 같이 aspect를 provider로 등록하고 `AopModule`을 import합니다. 타입 overload는 기존 호출과 동일한 래핑 로직과 선택적 metadata 인자를 사용합니다. 데코레이터 팩토리의 반환 타입을 명시할 때 사용할 `TypedMethodDecorator<T>`도 export합니다.
 
 ## 원본 메서드의 타입 추론하기
+
+데코레이터를 적용한 메서드에서 `F`를 추론하려면 **TypeScript 5.0 이상**이 필요합니다. TypeScript 4.x에서는 위 예제처럼 공유 계약을 명시하거나 `Retry<Method>(...)`처럼 제네릭 팩토리에 메서드 타입을 직접 지정하세요.
 
 여러 메서드 시그니처에 적용할 수 있는 aspect라면 options부터 반환하는 `TypedMethodDecorator<F>`까지 `F`를 제네릭으로 유지하세요. `@Retry(...)` 위치에서 팩토리를 직접 호출하면 TypeScript가 원본 메서드에서 `F`를 추론하고 options 콜백에도 적용할 수 있습니다.
 
