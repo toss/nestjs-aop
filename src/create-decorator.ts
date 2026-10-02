@@ -2,14 +2,28 @@ import { applyDecorators } from '@nestjs/common';
 import { AopMetadata } from './core/types';
 import { AddMetadata } from './utils';
 
+/** A legacy method decorator constrained to a shared aspect function type. */
+export type TypedMethodDecorator<T extends (...args: any[]) => any> = (
+  target: ThisParameterType<T> extends void ? object : object & ThisParameterType<T>,
+  propertyKey: string | symbol,
+  descriptor: TypedPropertyDescriptor<T>,
+) => TypedPropertyDescriptor<T> | void;
+
+// Keep the original overload first so calls without a type argument remain unrestricted.
+export function createDecorator(metadataKey: symbol | string, metadata?: unknown): MethodDecorator;
+/** Opt-in method checking; share T with LazyDecorator<T> or infer it in a generic factory. */
+export function createDecorator<T extends (...args: any[]) => any>(
+  metadataKey: symbol | string,
+  metadata?: unknown,
+): TypedMethodDecorator<T>;
+// Utility types such as ReturnType use the final overload; preserve the legacy declaration.
+export function createDecorator(metadataKey: symbol | string, metadata?: unknown): MethodDecorator;
+
 /**
  * @param metadataKey equal to 1st argument of Aspect Decorator
  * @param metadata The value corresponding to the metadata of WrapParams. It can be obtained from LazyDecorator's wrap method and used.
  */
-export const createDecorator = (
-  metadataKey: symbol | string,
-  metadata?: unknown,
-): MethodDecorator => {
+export function createDecorator(metadataKey: symbol | string, metadata?: unknown): MethodDecorator {
   const aopSymbol = Symbol('AOP_DECORATOR');
   return applyDecorators(
     // 1. Add metadata to the method
@@ -64,4 +78,4 @@ export const createDecorator = (
       }
     },
   );
-};
+}

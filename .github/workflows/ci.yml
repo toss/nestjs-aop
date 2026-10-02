@@ -25,6 +25,12 @@ jobs:
         run: |
           pnpm build
 
+      - name: Package contents
+        run: pnpm test:package
+
+      - name: Type tests
+        run: pnpm test:types
+
       - name: Test
         run: |
           pnpm test
@@ -57,6 +63,9 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Type tests
+        run: pnpm test:types
 
       - name: Test
         run: pnpm test

@@ -17,7 +17,8 @@ describe('Controller', () => {
     const cache = new Map<string, any>();
     @Controller()
     class FooController {
-      constructor(@Inject(REQUEST) private readonly request: any) {}
+      @Inject(REQUEST)
+      private readonly request: any;
 
       @AopTesting({
         callback: ({ wrapParams, args }) => {
