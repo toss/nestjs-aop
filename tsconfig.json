@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "outDir": "dist",
     "baseUrl": ".",
     "strict": true,
@@ -15,8 +15,11 @@
     "noUnusedLocals": true,
     "strictPropertyInitialization": false,
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": false,
+    "inlineSources": true,
+    "noEmitOnError": true,
+    "useDefineForClassFields": false
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist", "esm"]
+  "exclude": ["node_modules", "dist"]
 }

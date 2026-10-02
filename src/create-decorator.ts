@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
-import { AopMetadata } from './core/types';
-import { AddMetadata } from './utils';
+import type { AopMetadata } from './core/types.js';
+import { AddMetadata } from './utils/index.js';
 
 /**
  * @param metadataKey equal to 1st argument of Aspect Decorator

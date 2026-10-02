@@ -1,9 +1,9 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, Reflector } from '@nestjs/core';
-import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
-import { ASPECT } from './aspect';
-import { AopMetadata } from './core/types';
-import { LazyDecorator } from './lazy-decorator';
+import type { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper.js';
+import { ASPECT } from './aspect.js';
+import type { AopMetadata } from './core/types.js';
+import type { LazyDecorator } from './lazy-decorator.js';
 
 /**
  * If there are providers that have @Aspect declared and implement LazyDecorator,
@@ -51,7 +51,7 @@ export class AutoAspectExecutor implements OnModuleInit {
       return;
     }
 
-    // Use scanFromPrototype for support nestjs 8
+    // Static providers use their instance prototype; scoped providers use the metatype.
     const prototypeToScan = instanceWrapper.isDependencyTreeStatic()
       ? Object.getPrototypeOf(target)
       : target;

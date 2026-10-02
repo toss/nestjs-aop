@@ -3,9 +3,9 @@ import 'reflect-metadata';
 import { Controller, Get, Injectable, Module, Scope } from '@nestjs/common';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { AopModule } from '../aop.module';
-import { AopTesting, AopTestingDecorator } from './fixture/aop-testing.decorator';
-import { AopTestingModule } from './fixture/aop-testing.module';
+import { AopModule } from '../aop.module.js';
+import { AopTesting, AopTestingDecorator } from './fixture/aop-testing.decorator.js';
+import { AopTestingModule } from './fixture/aop-testing.module.js';
 
 describe('AopModule', () => {
   it('Lazy decorator overwrites the original function', async () => {
