@@ -1,5 +1,11 @@
 # @toss/nestjs-aop
 
+## 2.2.1
+
+### Patch Changes
+
+- [#66](https://github.com/toss/nestjs-aop/pull/66) [`3eb1595`](https://github.com/toss/nestjs-aop/commit/3eb1595ba57c006a24b194a7e7beffc50b47fbd3) Thanks [@WhiteKiwi](https://github.com/WhiteKiwi)! - Apply Nest's `Injectable()` decorator in `@Aspect` so aspect classes receive injectable metadata.
+
 ## 2.2.0
 
 ### Minor Changes

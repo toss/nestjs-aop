@@ -5,11 +5,11 @@ import {
   writeFileSync,
   rmSync,
   existsSync,
-  readdirSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
+import { assertSourceMaps } from './verify-source-maps.mjs';
 
 // Run against a tarball, never repository source or workspace-linked peers.
 const tarball = resolve(process.argv[2]);
@@ -185,17 +185,8 @@ try {
   if (existsSync(join(packageDir, 'src')) || existsSync(join(packageDir, 'docs'))) {
     throw new Error('Repository-only files leaked into the npm tarball');
   }
-  for (const file of readdirSync(join(packageDir, 'dist'))) {
-    if (file.endsWith('.d.ts.map')) {
-      throw new Error('Declaration maps point to unshipped source');
-    }
-    if (file.endsWith('.js.map')) {
-      const map = JSON.parse(readFileSync(join(packageDir, 'dist', file), 'utf8'));
-      if (!map.sourcesContent?.length || map.sources.some((source) => source.startsWith('/'))) {
-        throw new Error('Source maps must embed source and use relative paths');
-      }
-    }
-  }
+  const checkedMaps = assertSourceMaps(join(packageDir, 'dist'));
+  console.log(`PASS source maps: checked ${checkedMaps} JavaScript maps recursively`);
   console.log(
     `PASS packed consumer: Node ${process.versions.node}, Nest ${installedNest} (${nest}), Jest 29.7.0/30.4.2, TS 5.7.3/5.8.3`,
   );

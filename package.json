@@ -1,6 +1,6 @@
 {
   "name": "@toss/nestjs-aop",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
@@ -11,7 +11,9 @@
     "changeset": "changeset",
     "release": "changeset publish",
     "prepack": "npm run build",
-    "test:packed": "node scripts/verify-packed.mjs"
+    "test:packed": "node scripts/verify-packed.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:packaging": "node --test scripts/verify-source-maps.test.mjs"
   },
   "files": [
     "dist"

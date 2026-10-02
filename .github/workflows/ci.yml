@@ -21,6 +21,12 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Typecheck source and tests
+        run: pnpm typecheck
+
+      - name: Test packaging assertions
+        run: pnpm test:packaging
+
       - name: Build
         run: |
           pnpm build
@@ -58,6 +64,12 @@ jobs:
 
       - name: Install runtime under test
         run: mise install node@${{ matrix.node }}
+
+      - name: Typecheck source and tests
+        run: mise exec node@${{ matrix.node }} -- pnpm typecheck
+
+      - name: Test packaging assertions
+        run: mise exec node@${{ matrix.node }} -- pnpm test:packaging
 
       - name: Build
         run: mise exec node@${{ matrix.node }} -- pnpm build
