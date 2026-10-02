@@ -1,6 +1,6 @@
 # 타입이 있는 데코레이터
 
-[처음으로](../../readme_kr.md) · [사용 가이드](usage.md) · [English](../en/typed-decorators.md) | 한국어
+[처음으로](../../README.ko.md) · [사용 가이드](usage.md) · [English](../en/typed-decorators.md) | 한국어
 
 레거시 메서드 데코레이터에 선택적으로 적용하는 컴파일 시점 타입 검사입니다. Aspect 등록과 런타임 동작은 [사용 가이드](usage.md)부터 참고하세요.
 
@@ -97,7 +97,8 @@ helper는 receiver 동작을 포함한 원본 계약을 실제로 유지해야 �
 
 ## 타입 검사 범위와 제한
 
-- `strict`와 `experimentalDecorators`를 활성화해야 합니다. 새 표준 데코레이터가 아닌 TypeScript의 **레거시 데코레이터**용 API입니다.
+- `experimentalDecorators`를 활성화해야 합니다. 새 표준 데코레이터가 아닌 TypeScript의 **레거시 데코레이터**용 API입니다.
+- 더 꼼꼼한 메서드 타입 검사를 위해 `strict` 활성화를 권장하지만, 라이브러리 사용의 필수 조건은 아닙니다.
 - 특정 시그니처만 처리하는 aspect는 공유 함수 타입을 직접 지정하세요. 제네릭 aspect는 위의 원본 메서드 추론 패턴을 사용할 수 있습니다. metadata 키에서 타입을 추론하거나 등록된 aspect의 타입을 검증하지 않습니다. 데코레이터, `LazyDecorator`, `WrapParams`에 같은 타입 별칭을 사용하세요.
 - 데코레이터를 적용해도 메서드의 공개 시그니처는 바뀌지 않습니다. 비동기 메서드에는 `Promise<Result>`를 반환하는 함수 타입을 사용하세요. 오버로드나 제네릭 메서드는 전체 호출 시그니처를 공유하고 wrapper도 그 계약을 유지해야 합니다.
 - 공유 타입에 명시적인 `this` 매개변수가 있으면 데코레이터 대상도 검사합니다. `this: void` 계약은 receiver의 구조를 요구하지 않습니다. receiver의 타입이 중요하면 이를 포함하세요. `this`를 생략하면 receiver 요구사항은 검사하지 않으며 기존 런타임 바인딩 동작은 유지됩니다.

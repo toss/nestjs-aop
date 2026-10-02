@@ -1,10 +1,10 @@
 # 사용 가이드
 
-[처음으로](../../readme_kr.md) · [English](../en/usage.md) | 한국어 · [타입이 있는 데코레이터](typed-decorators.md)
+[처음으로](../../README.ko.md) · [English](../en/usage.md) | 한국어 · [타입이 있는 데코레이터](typed-decorators.md)
 
 Aspect는 메서드를 감싸는 NestJS 프로바이더입니다. 데코레이터는 공유 키로 메서드와 aspect를 연결하고, 선택적인 metadata로 메서드별 옵션을 전달합니다.
 
-[빠르게 시작하기](../../readme_kr.md#빠르게-시작하기)에는 완전한 앱 예제가 있습니다. 이 가이드에서는 metadata와 서비스 주입을 추가하고, 접근자·상속·테스트를 살펴봅니다. Nest의 레거시 데코레이터를 위해 `experimentalDecorators`와 `emitDecoratorMetadata`를 활성화하세요.
+[빠르게 시작하기](../../README.ko.md#빠르게-시작하기)에는 완전한 앱 예제가 있습니다. 이 가이드에서는 metadata와 서비스 주입을 추가하고, 접근자·상속·테스트를 살펴봅니다. Nest의 레거시 데코레이터를 위해 `experimentalDecorators`와 `emitDecoratorMetadata`를 활성화하세요.
 
 ## 1. 키와 데코레이터 정의하기
 
@@ -87,7 +87,7 @@ class GreetingService {
 class AppModule {}
 ```
 
-Nest가 앱을 초기화한 뒤 `app.get(GreetingService).greet('Nest')`를 호출하면 `[greeting] greet`를 출력하고 `Hello, Nest!`를 반환합니다. 앱 컨텍스트를 실행하는 코드는 [빠르게 시작하기](../../readme_kr.md#빠르게-시작하기)를 참고하세요.
+Nest가 앱을 초기화한 뒤 `app.get(GreetingService).greet('Nest')`를 호출하면 `[greeting] greet`를 출력하고 `Hello, Nest!`를 반환합니다. 앱 컨텍스트를 실행하는 코드는 [빠르게 시작하기](../../README.ko.md#빠르게-시작하기)를 참고하세요.
 
 ## Getter, Setter, 상속
 

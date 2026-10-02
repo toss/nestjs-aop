@@ -33,7 +33,7 @@ npm install @toss/nestjs-aop
 NestJS 12는 ESM 전용이고 이 패키지는 CommonJS로 배포되어 Node의 `require(esm)` 지원이 필요해요.
 이보다 이전 Node 20/22 버전에서는 `ERR_REQUIRE_ESM`으로 실패해요. NestJS 8–11 사용자는 영향이 없어요.
 
-`tsconfig.json`에서 Nest의 **레거시 데코레이터** 설정을 유지하고, 메서드 타입 검사에는 `strict`를 활성화하세요:
+`tsconfig.json`에서 Nest의 **레거시 데코레이터** 설정을 유지하세요. 더 꼼꼼한 메서드 타입 검사를 위해 `strict` 활성화를 권장해요:
 
 ```json
 {

@@ -97,7 +97,8 @@ Inference has boundaries:
 
 ## Type checking and limits
 
-- Enable `strict` and `experimentalDecorators`. These are TypeScript **legacy decorators**, not the newer standard decorator API.
+- `experimentalDecorators` is required. These are TypeScript **legacy decorators**, not the newer standard decorator API.
+- Enabling `strict` is recommended for more thorough method type checks, but is not required to use the library.
 - For a fixed-signature aspect, supply the shared function type explicitly. A generic aspect can use the original-method inference pattern above. It is not inferred from the metadata key, and a key does not verify the type of the registered aspect. Use the same type alias for the decorator, `LazyDecorator`, and `WrapParams`.
 - The decorated method keeps its own public signature. For asynchronous methods, use a function type returning `Promise<Result>`. For overloads or generic methods, share the full overloaded or generic callable type; a wrapper must preserve that contract.
 - An explicit `this` parameter in the shared type also checks the decorator target. A `this: void` contract does not require a receiver shape. Include the receiver contract when it matters; an omitted `this` does not check receiver requirements. The existing runtime binding behavior is unchanged.

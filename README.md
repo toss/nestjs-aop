@@ -9,7 +9,7 @@
     <a href="https://github.com/toss/nestjs-aop/actions/workflows/ci.yml"><img src="https://github.com/toss/nestjs-aop/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
     <a href="https://github.com/toss/nestjs-aop/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@toss/nestjs-aop" alt="License"></a>
   </p>
-  <p><a href="#installation">Install</a> · <a href="#quick-start">Quick start</a> · <a href="#documentation">Documentation</a> · <a href="https://github.com/toss/nestjs-aop/blob/main/readme_kr.md">한국어</a></p>
+  <p><a href="#installation">Install</a> · <a href="#quick-start">Quick start</a> · <a href="#documentation">Documentation</a> · <a href="https://github.com/toss/nestjs-aop/blob/main/README.ko.md">한국어</a></p>
 </div>
 
 Wrap NestJS methods with logging, caching, retries, or your own cross-cutting logic.
@@ -33,7 +33,7 @@ Or use `pnpm add @toss/nestjs-aop` / `yarn add @toss/nestjs-aop`.
 NestJS 12 is ESM-only, and this CommonJS package needs Node's `require(esm)` support.
 Earlier Node 20/22 versions fail with `ERR_REQUIRE_ESM`. NestJS 8–11 users are unaffected.
 
-Keep Nest's **legacy decorator** settings in your `tsconfig.json`; enable `strict` for typed method checks:
+Keep Nest's **legacy decorator** settings in your `tsconfig.json`. Enabling `strict` is recommended for more thorough method type checks:
 
 ```json
 {
