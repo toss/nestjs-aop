@@ -25,6 +25,9 @@ jobs:
         run: |
           pnpm build
 
+      - name: Package contents
+        run: pnpm test:package
+
       - name: Type tests
         run: pnpm test:types
 
