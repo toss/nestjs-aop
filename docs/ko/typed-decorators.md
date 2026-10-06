@@ -8,7 +8,7 @@
 
 `createDecorator<T>`를 사용하면 데코레이터를 적용한 메서드와 `LazyDecorator<T>`에서 같은 함수 타입을 공유하고 호환성을 검사할 수 있습니다. 선택적으로 사용하는 API이며 기존 `createDecorator` 호출은 그대로 유지됩니다.
 
-`createDecorator<TextMethod>`처럼 공유 계약을 명시하는 형태는 TypeScript 4.7 이상에서 사용할 수 있습니다.
+`createDecorator<TextMethod>`처럼 공유 계약을 명시하는 형태는 TypeScript 4.7 이상에서 제공하는 타입 시스템 기능을 사용합니다. 패키지의 ESM/모듈 호환성 조건은 별도입니다. NodeNext를 사용하는 CommonJS 앱에는 TypeScript >= 5.8이 필요합니다. 컴파일러 설정은 [v3 마이그레이션 가이드](../migrations/v3.md#typescript-consumers) (영문)를 참고하세요.
 
 ```typescript
 import { Injectable } from '@nestjs/common';

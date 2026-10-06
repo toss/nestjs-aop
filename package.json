@@ -1,33 +1,32 @@
 {
   "name": "@toss/nestjs-aop",
-  "version": "2.1.8",
-  "main": "dist/index.js",
+  "version": "2.2.1",
   "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers 4",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --maxWorkers 4",
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "changeset": "changeset",
     "release": "changeset publish",
+    "prepack": "npm run build",
+    "test:packed": "node scripts/verify-packed.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:packaging": "node --test scripts/verify-source-maps.test.mjs",
     "test:types": "tsc -p tsconfig.json --noEmit",
     "test:package": "node scripts/check-package.mjs"
   },
   "files": [
-    "dist",
-    "src",
-    "!src/__test__"
+    "dist"
   ],
   "peerDependencies": {
-    "@nestjs/common": "^8 || ^9 || ^10 || ^11 || ^12",
-    "@nestjs/core": "^8 || ^9 || ^10 || ^11 || ^12",
+    "@nestjs/common": "^10 || ^11 || ^12",
+    "@nestjs/core": "^10 || ^11 || ^12",
     "reflect-metadata": "^0.1.13 || ^0.2.0",
     "rxjs": "^7.5.6"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.23.2",
-    "@babel/preset-env": "^7.23.2",
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^3.0.3",
     "@eslint/js": "^9.39.5",
@@ -52,6 +51,10 @@
     "typescript": "^5.2.2",
     "typescript-eslint": "^8.67.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toss/nestjs-aop.git"
+  },
   "homepage": "https://github.com/toss/nestjs-aop",
   "bugs": {
     "url": "https://github.com/toss/nestjs-aop/issues"
@@ -68,5 +71,13 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"
   }
 }

@@ -1,4 +1,4 @@
-import { createDecorator, LazyDecorator, TypedMethodDecorator, WrapParams } from '../src';
+import { createDecorator, LazyDecorator, TypedMethodDecorator, WrapParams } from '../src/index.js';
 
 type AsyncMethod = (...args: any[]) => Promise<unknown>;
 type RetryOptions<F extends AsyncMethod> = {

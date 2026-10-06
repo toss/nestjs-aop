@@ -1,4 +1,4 @@
-import { createDecorator, LazyDecorator, WrapParams } from '../src';
+import { createDecorator, LazyDecorator, WrapParams } from '../src/index.js';
 
 const KEY = Symbol('typed');
 type TextMethod = (value: string) => string;

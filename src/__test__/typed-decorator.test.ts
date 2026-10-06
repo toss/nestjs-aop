@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Injectable } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { AopModule, Aspect, createDecorator, LazyDecorator, WrapParams } from '../index';
+import { AopModule, Aspect, createDecorator, LazyDecorator, WrapParams } from '../index.js';
 
 const TEXT = Symbol('typed-text');
 const ASYNC_TEXT = Symbol('typed-async-text');

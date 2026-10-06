@@ -134,9 +134,10 @@ it('runs a decorated method', async () => {
 });
 ```
 
-이 예제는 프로젝트에 Jest 설정이 되어 있다고 가정합니다. 초기화는 테스트 러너나 모듈 형식과 관계없이 필요합니다.
+패키지의 ESM 빌드에 맞게 [v3 마이그레이션 가이드](../migrations/v3.md#jest-portable-esm-setup) (영문)를 참고해 Jest를 설정하세요. ESM 테스트 출력과 `--experimental-vm-modules`를 사용하거나, Node >= 24.9에서 같은 플래그로 검증된 Jest 30.4.2 CommonJS 설정을 사용할 수 있습니다. 초기화는 테스트 러너나 모듈 형식과 관계없이 필요합니다.
 
 ## 다음 단계
 
 - [타입이 있는 데코레이터](typed-decorators.md): 공유 계약, 제네릭 추론, 검사 범위
+- [v2에서 v3로 마이그레이션](../migrations/v3.md) (영문): Node.js, ESM, TypeScript, Jest 사용 조건
 - [v1에서 v2로 마이그레이션](../migration-guide-v2.md) (영문): `SetMetadata`를 `createDecorator`로 교체하기

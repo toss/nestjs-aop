@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
-import { AopMetadata } from './core/types';
-import { AddMetadata } from './utils';
+import type { AopMetadata } from './core/types.js';
+import { AddMetadata } from './utils/index.js';
 
 /** A legacy method decorator constrained to a shared aspect function type. */
 export type TypedMethodDecorator<T extends (...args: any[]) => any> = (

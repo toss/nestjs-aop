@@ -17,10 +17,11 @@ try {
   );
   assert.ok(existsSync(join(destination, archive.filename)), 'npm pack must create an archive');
   const paths = new Set(archive.files.map(({ path }) => path));
-  const { main, types } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
-  for (const path of [main, types, 'src/index.ts']) {
+  const { exports, types } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+  for (const path of [exports.default.replace(/^\.\//, ''), types]) {
     assert.ok(paths.has(path), `Package is missing ${path}; run the build first`);
   }
+  assert.ok(![...paths].some((path) => /^(?:src|docs)\//.test(path)), 'Package must be dist-only');
   const testFiles = [...paths].filter((path) =>
     /(^|\/)(?:__tests?__|type-tests|fixtures?)(\/|$)|\.(?:test|spec)\.[cm]?[jt]sx?$/.test(path),
   );

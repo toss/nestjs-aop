@@ -134,9 +134,10 @@ it('runs a decorated method', async () => {
 });
 ```
 
-This example assumes your project's existing Jest setup. Initialization is required independently of the test runner or module format.
+Configure Jest for the package's ESM build using the [v3 migration guide](../migrations/v3.md#jest-portable-esm-setup): ESM test output and `--experimental-vm-modules`, or the tested Jest 30.4.2 CommonJS setup on Node >= 24.9 with the same flag. Initialization is required independently of the test runner or module format.
 
 ## Next steps
 
 - [Typed decorators](typed-decorators.md): shared contracts, generic inference, and checking limits
+- [Migrating from v2 to v3](../migrations/v3.md): Node.js, ESM, TypeScript, and Jest requirements
 - [Migrating from v1 to v2](../migration-guide-v2.md): replace `SetMetadata` with `createDecorator`

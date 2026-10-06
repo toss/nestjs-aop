@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { DiscoveryModule } from '@nestjs/core';
 
-import { AutoAspectExecutor } from './auto-aspect-executor';
+import { AutoAspectExecutor } from './auto-aspect-executor.js';
 
 @Module({
   imports: [DiscoveryModule],

@@ -8,7 +8,7 @@ Optional compile-time checks for legacy method decorators. Start with the [usage
 
 Use `createDecorator<T>` to check a decorated method against the same function type used by `LazyDecorator<T>`. This is opt-in: existing `createDecorator` calls remain unrestricted.
 
-The explicit shared-contract form, such as `createDecorator<TextMethod>`, works with TypeScript 4.7 and later.
+The explicit shared-contract form, such as `createDecorator<TextMethod>`, uses type-system features available in TypeScript 4.7 and later. The package's ESM/module compatibility requirements are separate: CommonJS applications using NodeNext require TypeScript >= 5.8. See the [v3 migration guide](../migrations/v3.md#typescript-consumers) when choosing compiler settings.
 
 ```typescript
 import { Injectable } from '@nestjs/common';

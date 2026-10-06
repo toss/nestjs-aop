@@ -29,9 +29,10 @@ npm install @toss/nestjs-aop
 
 Or use `pnpm add @toss/nestjs-aop` / `yarn add @toss/nestjs-aop`.
 
-**Supports NestJS 8–12.** With NestJS 12, use Node.js `^20.19.0 || >=22.12.0`:
-NestJS 12 is ESM-only, and this CommonJS package needs Node's `require(esm)` support.
-Earlier Node 20/22 versions fail with `ERR_REQUIRE_ESM`. NestJS 8–11 users are unaffected.
+**Requires Node.js >= 22.12.0 and NestJS 10–12.** This package ships one ESM build.
+CommonJS apps can load it through `require(esm)`. CommonJS + TypeScript NodeNext requires TypeScript >= 5.8; `node16` and `node18` do not support this interop.
+Jest needs ESM mode and `--experimental-vm-modules`, or the tested Jest 30.4.2 CommonJS setup on Node >= 24.9 with the same flag.
+See the [v3 migration guide](https://github.com/toss/nestjs-aop/blob/main/docs/migrations/v3.md) for compiler and Jest configuration, including upgrades from v2.
 
 Keep Nest's **legacy decorator** settings in your `tsconfig.json`. Enabling `strict` is recommended for more thorough method type checks:
 
@@ -105,6 +106,7 @@ The original result is returned unchanged. In tests, call `await module.init()` 
 
 - **[Usage guide](https://github.com/toss/nestjs-aop/blob/main/docs/en/usage.md)** · Build decorators, pass metadata, inject services, and work with accessors, inheritance, and tests
 - **[Typed decorators](https://github.com/toss/nestjs-aop/blob/main/docs/en/typed-decorators.md)** · Shared contracts, original-method inference, and TypeScript's limits
+- **[Migrating from v2 to v3](https://github.com/toss/nestjs-aop/blob/main/docs/migrations/v3.md)** · Node.js, ESM, TypeScript, and Jest requirements
 - **[Migrating from v1 to v2](https://github.com/toss/nestjs-aop/blob/main/docs/migration-guide-v2.md)** · Replace `SetMetadata` with `createDecorator`
 
 Typed method checks are optional. Existing `createDecorator(key, metadata?)` calls keep working.

@@ -1,6 +1,6 @@
-import { Aspect } from '../../aspect';
-import { createDecorator } from '../../create-decorator';
-import { LazyDecorator, WrapParams } from '../../lazy-decorator';
+import { Aspect } from '../../aspect.js';
+import { createDecorator } from '../../create-decorator.js';
+import type { LazyDecorator, WrapParams } from '../../lazy-decorator.js';
 
 export const OBSERVABLE = Symbol('OBSERVABLE');
 

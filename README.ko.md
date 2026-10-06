@@ -29,9 +29,10 @@ npm install @toss/nestjs-aop
 
 `pnpm add @toss/nestjs-aop` / `yarn add @toss/nestjs-aop`도 사용할 수 있어요.
 
-**NestJS 8–12를 지원해요.** NestJS 12에서는 Node.js `^20.19.0 || >=22.12.0`를 사용하세요.
-NestJS 12는 ESM 전용이고 이 패키지는 CommonJS로 배포되어 Node의 `require(esm)` 지원이 필요해요.
-이보다 이전 Node 20/22 버전에서는 `ERR_REQUIRE_ESM`으로 실패해요. NestJS 8–11 사용자는 영향이 없어요.
+**Node.js >= 22.12.0과 NestJS 10–12가 필요해요.** 이 패키지는 단일 ESM 빌드로 배포돼요.
+CommonJS 앱에서도 `require(esm)`으로 사용할 수 있어요. CommonJS + TypeScript NodeNext에는 TypeScript >= 5.8이 필요하며, `node16`과 `node18`은 이 연동을 지원하지 않아요.
+Jest는 ESM 모드와 `--experimental-vm-modules`가 필요해요. 검증된 Jest 30.4.2 CommonJS 설정은 Node >= 24.9에서 같은 플래그로 사용할 수 있어요.
+v2에서 업그레이드할 때 필요한 변경 사항과 컴파일러·Jest 설정은 [v3 마이그레이션 가이드](https://github.com/toss/nestjs-aop/blob/main/docs/migrations/v3.md) (영문)를 참고하세요.
 
 `tsconfig.json`에서 Nest의 **레거시 데코레이터** 설정을 유지하세요. 더 꼼꼼한 메서드 타입 검사를 위해 `strict` 활성화를 권장해요:
 
@@ -105,6 +106,7 @@ Hello, Nest!
 
 - **[사용 가이드](https://github.com/toss/nestjs-aop/blob/main/docs/ko/usage.md)** · 데코레이터 작성, metadata 전달, 서비스 주입, 접근자·상속·테스트
 - **[타입이 있는 데코레이터](https://github.com/toss/nestjs-aop/blob/main/docs/ko/typed-decorators.md)** · 공유 계약, 원본 메서드 타입 추론, TypeScript의 검사 범위
+- **[v2에서 v3로 마이그레이션](https://github.com/toss/nestjs-aop/blob/main/docs/migrations/v3.md)** (영문) · Node.js, ESM, TypeScript, Jest 사용 조건
 - **[v1에서 v2로 마이그레이션](https://github.com/toss/nestjs-aop/blob/main/docs/migration-guide-v2.md)** (영문) · `SetMetadata`를 `createDecorator`로 교체하기
 
 메서드 타입 검사는 선택 사항이에요. 기존 `createDecorator(key, metadata?)` 호출도 그대로 사용할 수 있어요.

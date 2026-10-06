@@ -3,9 +3,9 @@ import { REQUEST } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
 import supertest from 'supertest';
-import { AopModule } from '../aop.module';
-import { AopTesting } from './fixture/aop-testing.decorator';
-import { AopTestingModule } from './fixture/aop-testing.module';
+import { AopModule } from '../aop.module.js';
+import { AopTesting } from './fixture/aop-testing.decorator.js';
+import { AopTestingModule } from './fixture/aop-testing.module.js';
 
 describe('Controller', () => {
   let app: INestApplication;

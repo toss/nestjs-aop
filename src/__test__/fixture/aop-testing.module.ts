@@ -1,5 +1,5 @@
 import { DynamicModule, Module, ModuleMetadata } from '@nestjs/common';
-import { AopTestingDecorator } from './aop-testing.decorator';
+import { AopTestingDecorator } from './aop-testing.decorator.js';
 
 @Module({})
 export class AopTestingModule {
