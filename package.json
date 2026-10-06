@@ -13,7 +13,9 @@
     "prepack": "npm run build",
     "test:packed": "node scripts/verify-packed.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test:packaging": "node --test scripts/verify-source-maps.test.mjs"
+    "test:packaging": "node --test scripts/verify-source-maps.test.mjs",
+    "test:types": "tsc -p tsconfig.json --noEmit",
+    "test:package": "node scripts/check-package.mjs"
   },
   "files": [
     "dist"
