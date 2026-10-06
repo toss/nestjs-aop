@@ -1,5 +1,6 @@
-module.exports = {
+export default {
   roots: ['<rootDir>'],
+  moduleNameMapper: { '^(\\.{1,2}/.*)\\.js$': '$1' },
   testMatch: ['**/*.test.ts'],
   extensionsToTreatAsEsm: ['.ts'],
   transform: {

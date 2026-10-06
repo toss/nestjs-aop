@@ -50,7 +50,7 @@
 - 🎯 **데코레이터 기반 AOP** — 메소드, getter, setter 어디든 캐싱·로깅·재시도 같은 공통 로직을 재사용 가능한 형태로 감쌀 수 있어요
 - 🧩 **IoC 컨테이너와 자연스럽게 동작** — aspect도 평범한 NestJS provider라 필요한 건 `@Inject`로 그대로 받아 써요
 - 🪶 **런타임 매직 없음** — 네이티브 데코레이터 + `reflect-metadata` 기반, 별도 코드 변환 단계가 없어요
-- ✅ **NestJS 8 → 12 지원** — 메이저 버전 트레드밀 없이 패키지 하나로 대응해요
+- ✅ **NestJS 10 → 12 지원** — 메이저 버전 트레드밀 없이 패키지 하나로 대응해요
 - 🧬 **상속까지 고려** — 데코레이팅된 메소드는 자식 클래스에서 호출해도 그대로 동작해요
 
 <!-- 설치 방법 -->
@@ -63,10 +63,10 @@ pnpm add @toss/nestjs-aop
 yarn add @toss/nestjs-aop
 ```
 
-> **NestJS 12를 쓰고 있다면?** NestJS 12는 ESM 전용으로 배포되는데, 이 패키지는 CommonJS로 배포돼요.
-> 그래서 로딩이 Node의 `require(esm)` 지원에 의존하고, NestJS 12 사용자는
-> **Node.js `^20.19.0 || >=22.12.0`**가 필요해요. Node 20.x의 20.19.0 미만이나 Node 22.x의 22.12.0 미만에서는 `ERR_REQUIRE_ESM`으로 실패해요.
-> NestJS 8 - 11 사용자는 영향이 없어요.
+> **사용 조건:** Node.js >= 22.12.0 · NestJS 10, 11, 12 · ESM 빌드.
+> CommonJS 앱에서도 `require(esm)`으로 사용할 수 있어요. CJS + TypeScript NodeNext에는 TS >= 5.8이 필요하며, `node16`은 이 연동을 지원하지 않아요.
+> Jest는 ESM 모드와 `--experimental-vm-modules`가 필요해요. 검증된 Jest 30.4.2 CJS 설정은 Node >= 24.9에서 같은 플래그로 사용할 수 있어요.
+> v2에서 업그레이드한다면 [마이그레이션 가이드](https://github.com/toss/nestjs-aop/blob/main/docs/migrations/v3.md)를 참고해주세요.
 
 <!-- 빠르게 시작하기 -->
 

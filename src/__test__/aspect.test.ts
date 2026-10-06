@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 
 import { Injectable } from '@nestjs/common';
-import { INJECTABLE_WATERMARK } from '@nestjs/common/constants';
+import { INJECTABLE_WATERMARK } from '@nestjs/common/constants.js';
 import { Test } from '@nestjs/testing';
-import { AopModule } from '../aop.module';
-import { ASPECT, Aspect } from '../aspect';
-import { createDecorator } from '../create-decorator';
-import { LazyDecorator, WrapParams } from '../lazy-decorator';
+import { AopModule } from '../aop.module.js';
+import { ASPECT, Aspect } from '../aspect.js';
+import { createDecorator } from '../create-decorator.js';
+import type { LazyDecorator, WrapParams } from '../lazy-decorator.js';
 
 describe('Aspect', () => {
   it.each(['ASPECT_TEST', Symbol('ASPECT_TEST')])(
