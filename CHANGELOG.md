@@ -1,5 +1,19 @@
 # @toss/nestjs-aop
 
+## 3.0.0
+
+### Major Changes
+
+- [#65](https://github.com/toss/nestjs-aop/pull/65) [`3971571`](https://github.com/toss/nestjs-aop/commit/39715711873d22c533407a0ab93ed74772c0d2c5) Thanks [@WhiteKiwi](https://github.com/WhiteKiwi)! - Ship ESM only and require Node.js 22.12.0 or later. Drop NestJS 8 and 9 support;
+  NestJS 10, 11 and 12 remain supported. The public decorator runtime API is unchanged.
+
+  Consumers must resolve the package through its root export; undocumented `dist/*` and `src/*` deep imports are no longer exported.
+  CommonJS applications can use Node's synchronous `require(esm)` support, but older
+  CommonJS Jest configurations need migration to Jest ESM mode. CommonJS TypeScript
+  consumers using NodeNext need TypeScript 5.8 or later; node16 does not support
+  this interop. See the [migration guide](https://github.com/toss/nestjs-aop/blob/main/docs/migrations/v3.md)
+  for tested Node/Jest combinations and migration instructions.
+
 ## 2.2.1
 
 ### Patch Changes
